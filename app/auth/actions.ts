@@ -60,7 +60,7 @@ export async function signIn(formData: FormData) {
   if (error) portalRedirect("error", "The email address or password is incorrect.");
 
   revalidatePath("/", "layout");
-  portalRedirect("message", "Welcome back.");
+  redirect("/dashboard?message=Welcome%20back.");
 }
 
 export async function register(formData: FormData) {
@@ -83,7 +83,7 @@ export async function register(formData: FormData) {
     email: result.data.email,
     password: result.data.password,
     options: {
-      emailRedirectTo: `${origin}/auth/confirm?next=/portal`,
+      emailRedirectTo: `${origin}/auth/confirm?next=/dashboard`,
       data: {
         first_name: result.data.firstName,
         last_name: result.data.lastName,

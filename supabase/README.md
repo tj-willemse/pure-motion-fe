@@ -24,4 +24,17 @@ where email = 'replace-with-trusted-admin@example.com'
 on conflict do nothing;
 ```
 
-After this one-time bootstrap, administrators can assign roles through the future admin portal.
+After this one-time bootstrap, administrators can assign roles from **Dashboard → People**.
+
+## Portal operations migration
+
+`20260924232000_portal_operations.sql` adds the live portal data model and policies for:
+
+- services and locations;
+- clients and managed family members;
+- lesson and assessment bookings;
+- coach weekly availability and date-specific exceptions;
+- operations booking assignment/status changes;
+- role-aware client, coach, receptionist and admin access.
+
+If the CLI cannot access the project, paste the complete migration into the Supabase SQL Editor and run it once. Then bootstrap the first administrator with the query above. Do not run only part of the migration.

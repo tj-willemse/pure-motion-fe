@@ -8,7 +8,7 @@ This is the working handoff for the Pure Motion Golf Academy website redesign. I
 
 The website is a custom, editorial-style redesign for a Cape Town golf academy operating at Durbanville Golf Club and Hazendal Golf, Stellenbosch. It presents coaching, junior programmes, coaches, events, the driving range, a booking experience, and a customer portal preview.
 
-The current product is a polished frontend implementation. It is **not yet a production booking, payment, authentication, or account-management system**.
+The public website and Supabase authentication are deployed. A role-aware booking and account portal is implemented in code; its operations migration must be applied before the new dashboard data features are live. Payments are not implemented.
 
 ## 2. Project location and commands
 
@@ -65,7 +65,9 @@ https://github.com/tj-willemse/pure-motion-fe
 - `next/image` is used for image optimisation
 - DM Sans is loaded with `next/font`
 - The content model is currently static TypeScript data, not a CMS
-- The Supabase-ready authentication and role foundation is implemented locally, but the intended live Supabase project still needs its migration applied and environment values configured
+- Supabase authentication, confirmation and cookie sessions are live on Vercel
+- The role-aware `/dashboard` application is implemented for client, coach, receptionist and admin accounts
+- The operations migration still needs to be applied to the live Supabase project
 - No payment provider, live booking API or automated test suite is connected yet
 
 Important files:
@@ -260,7 +262,7 @@ It does **not** currently:
 - Connect to a customer account
 - Handle cancellations/rescheduling
 
-The portal now has working Supabase SSR authentication code, registration, confirmation and sign-out actions. It remains inactive until the intended Supabase project URL/publishable key are added and the auth migration is applied.
+The portal has live Supabase SSR authentication, registration, email confirmation and sign-out. The new `/dashboard` code adds protected client, coach, receptionist and admin views backed by the pending operations migration.
 
 ## 10. Remaining work, prioritised
 
@@ -273,22 +275,22 @@ The portal now has working Supabase SSR authentication code, registration, confi
 - Confirm social links, WhatsApp number, review link and external results links.
 - Decide whether legal pages should remain on the existing website or be rebuilt locally.
 
-### Priority 2 — Real booking system
+### Priority 2 — Complete booking operations
 
-- Choose the source of truth for services, coaches, locations, availability and pricing.
-- Connect a booking/calendar provider or build the required backend.
-- Replace hard-coded dates/times in `components/booking-flow.tsx`.
-- Add customer details, validation, confirmation and error states.
+- Apply `supabase/migrations/20260924232000_portal_operations.sql` to production.
+- Confirm service prices and durations seeded by the migration.
+- Decide whether the public `components/booking-flow.tsx` should create the same authenticated booking records or remain a marketing preview.
+- Add email/WhatsApp booking confirmations.
 - Add deposits/payments if required.
 - Add confirmation emails/WhatsApp messages if required.
 - Define cancellation, refund and rescheduling workflows.
 
-### Priority 3 — Customer portal/authentication
+### Priority 3 — Portal follow-up
 
-- Choose authentication and account infrastructure.
-- Implement secure sign-in, forgotten-password and session handling.
-- Build lesson history, upcoming bookings, package balances, payments and profile management.
-- Connect portal data to the booking system.
+- Add forgotten-password and password-change flows.
+- Add package balances and payments once the commercial rules are confirmed.
+- Add rescheduling rules and any required approval workflow.
+- Add automated dashboard and RLS tests.
 
 ### Priority 4 — Forms and live integrations
 
@@ -354,7 +356,7 @@ cd "/Users/tjwillemse/Desktop/Pure Motion Golf/development/fe" && npm run lint &
 2. Finalise and approve all business content, rates, dates and coach data.
 3. Decide the booking/calendar/payment architecture.
 4. Implement the real booking workflow.
-5. Implement authentication and the customer portal.
+5. Apply and test the portal operations migration, then promote the first administrator.
 6. Complete cross-browser, mobile, accessibility and performance QA.
 7. Add tests, source control, preview deployment and production monitoring.
 8. Launch only after stakeholder content approval and real booking-path testing.
@@ -367,7 +369,7 @@ Continue the Pure Motion Golf Academy redesign in:
 
 First read PROJECT_HANDOFF.md and AGENTS.md completely. Then inspect the current implementation before changing anything. Preserve the established premium editorial design, WebP-only raster image rule, transparent-to-solid sticky header behaviour, strict dropdown closing behaviour, sticky section navigation, and scroll-linked orange section progress. Do not reconnect CSS :hover/:focus-within directly to dropdown visibility; React activeMenu state is authoritative.
 
-Run npm run lint, npm run typecheck and npm run build before handing work back. The booking flow and portal are currently frontend previews, not real systems. Clearly distinguish completed frontend work from missing backend/integration work.
+Run npm run lint, npm run typecheck and npm run build before handing work back. Supabase authentication is live. The role-aware dashboard is implemented but requires the portal operations migration to be applied and verified against each role. Clearly distinguish live behaviour from pending integrations such as payments and outbound notifications.
 
 My next request is: [INSERT REQUEST HERE]
 ```

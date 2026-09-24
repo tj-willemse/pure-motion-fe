@@ -8,6 +8,8 @@ type PendingSubmitButtonProps = {
   pendingLabel: string;
   className?: string;
   disabled?: boolean;
+  name?: string;
+  value?: string;
 };
 
 export function PendingSubmitButton({
@@ -15,6 +17,8 @@ export function PendingSubmitButton({
   pendingLabel,
   className = "button",
   disabled = false,
+  name,
+  value,
 }: PendingSubmitButtonProps) {
   const { pending } = useFormStatus();
 
@@ -22,6 +26,8 @@ export function PendingSubmitButton({
     <button
       className={className}
       type="submit"
+      name={name}
+      value={value}
       disabled={disabled || pending}
       aria-busy={pending}
     >

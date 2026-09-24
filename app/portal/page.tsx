@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, LogOut } from "lucide-react";
-import { signIn, signOut } from "@/app/auth/actions";
+import { ArrowRight } from "lucide-react";
+import { signIn } from "@/app/auth/actions";
 import { ToastMessage } from "@/components/toast-message";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Customer Portal",
@@ -26,19 +27,7 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
   const supabase = configured ? await createClient() : null;
   const claims = supabase ? (await supabase.auth.getClaims()).data?.claims : null;
 
-  let profile: { first_name: string | null; last_name: string | null } | null = null;
-  let roles: string[] = [];
-
-  if (supabase && claims?.sub) {
-    const [profileResult, roleResult] = await Promise.all([
-      supabase.from("profiles").select("first_name,last_name").eq("id", claims.sub).maybeSingle(),
-      supabase.from("user_roles").select("role").eq("user_id", claims.sub),
-    ]);
-    profile = profileResult.data;
-    roles = roleResult.data?.map(({ role }) => role) ?? [];
-  }
-
-  const displayName = [profile?.first_name, profile?.last_name].filter(Boolean).join(" ");
+  if (claims) redirect("/dashboard");
 
   return (
     <main id="main-content" className="portal-page">
@@ -47,39 +36,21 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
         <section className="portal-promise">
           <h1>Everything around your coaching, in one place.</h1>
         </section>
-        {claims ? (
-          <section className="sign-in-card portal-account-card">
-            <p className="portal-eyebrow">Signed in as</p>
-            <h2>{displayName || claims.email || "Pure Motion member"}</h2>
-            <p>{claims.email}</p>
-            <div className="portal-account-summary">
-              <div><span>Access</span><strong>{roles.length ? roles.join(", ") : "Client"}</strong></div>
-              <div><span>Bookings</span><strong>Calendar connection next</strong></div>
-              <div><span>Profile</span><strong>{profile ? "Ready" : "Database migration required"}</strong></div>
-            </div>
-            <form action={signOut}>
-              <PendingSubmitButton className="button button-outline" pendingLabel="Signing out…">
-                Sign out <LogOut size={17} />
-              </PendingSubmitButton>
-            </form>
-          </section>
-        ) : (
-          <section className="sign-in-card">
-            <h2>Welcome back.</h2>
-            <p>Sign in to your Pure Motion account.</p>
-            {!configured && <p className="portal-alert">The portal UI is ready. Add the Supabase project URL and publishable key to activate sign-in.</p>}
-            <form action={signIn}>
-              <label htmlFor="email">Email address</label>
-              <input id="email" name="email" type="email" placeholder="you@example.com" autoComplete="email" required />
-              <label htmlFor="password">Password</label>
-              <input id="password" name="password" type="password" placeholder="Enter your password" autoComplete="current-password" minLength={8} required />
-              <PendingSubmitButton pendingLabel="Signing in…" disabled={!configured}>
-                Sign in <ArrowRight size={18} />
-              </PendingSubmitButton>
-            </form>
-            <p className="portal-help">New to Pure Motion? <Link href="/portal/register">Create your account</Link></p>
-          </section>
-        )}
+        <section className="sign-in-card">
+          <h2>Welcome back.</h2>
+          <p>Sign in to your Pure Motion account.</p>
+          {!configured && <p className="portal-alert">The portal UI is ready. Add the Supabase project URL and publishable key to activate sign-in.</p>}
+          <form action={signIn}>
+            <label htmlFor="email">Email address</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" autoComplete="email" required />
+            <label htmlFor="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="Enter your password" autoComplete="current-password" minLength={8} required />
+            <PendingSubmitButton pendingLabel="Signing in…" disabled={!configured}>
+              Sign in <ArrowRight size={18} />
+            </PendingSubmitButton>
+          </form>
+          <p className="portal-help">New to Pure Motion? <Link href="/portal/register">Create your account</Link></p>
+        </section>
       </div>
     </main>
   );

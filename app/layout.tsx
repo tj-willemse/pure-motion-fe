@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans } from "next/font/google";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
 import { AppToaster } from "@/components/app-toaster";
+import { SiteChrome } from "@/components/site-chrome";
 import { site, siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -69,9 +68,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
-        <SiteHeader />
+        <SiteChrome position="header" />
         {children}
-        <SiteFooter />
+        <SiteChrome position="footer" />
         <AppToaster />
       </body>
     </html>
