@@ -11,10 +11,24 @@ const loginSchema = z.object({
   password: z.string().min(8, "Your password must contain at least 8 characters."),
 });
 
-const registrationSchema = loginSchema.extend({
-  firstName: z.string().trim().min(1, "Enter your first name."),
-  lastName: z.string().trim().min(1, "Enter your surname."),
-});
+const registrationSchema = z
+  .object({
+    firstName: z.string().trim().min(1, "Enter your first name."),
+    lastName: z.string().trim().min(1, "Enter your surname."),
+    email: z.string().trim().email("Enter a valid email address."),
+    password: z
+      .string()
+      .min(10, "Use at least 10 characters for your password.")
+      .regex(/[a-z]/, "Add a lowercase letter to your password.")
+      .regex(/[A-Z]/, "Add an uppercase letter to your password.")
+      .regex(/\d/, "Add a number to your password.")
+      .regex(/[^A-Za-z0-9]/, "Add a symbol to your password."),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Your passwords do not match.",
+    path: ["confirmPassword"],
+  });
 
 function portalRedirect(type: "error" | "message", message: string, path = "/portal"): never {
   redirect(`${path}?${type}=${encodeURIComponent(message)}`);
@@ -24,6 +38,7 @@ export async function signIn(formData: FormData) {
   const result = loginSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
   });
 
   if (!result.success) portalRedirect("error", result.error.issues[0].message);

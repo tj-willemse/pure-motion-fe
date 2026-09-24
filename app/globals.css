@@ -5333,6 +5333,45 @@ div[id] {
   font-size: 0.82rem;
 }
 
+.password-feedback {
+  margin: -7px 0 18px;
+}
+
+.password-strength-heading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.password-strength-heading strong {
+  color: var(--ink);
+}
+
+.password-strength-meter {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+
+.password-strength-meter span {
+  height: 3px;
+  border-radius: 99px;
+  background: var(--line);
+}
+
+.password-strength-meter span.is-active {
+  background: var(--orange);
+}
+
+.password-feedback p {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
 .sign-in-card form .button {
   width: 100%;
   margin-top: 7px;

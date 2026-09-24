@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { register } from "@/app/auth/actions";
+import { RegistrationForm } from "@/app/portal/register/registration-form";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export const metadata: Metadata = {
@@ -29,17 +28,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           <p>Start with the parent, guardian or adult golfer&apos;s details.</p>
           {error && <p className="portal-alert portal-alert-error">{error}</p>}
           {!configured && <p className="portal-alert">Supabase connection details are still required before registration can be used.</p>}
-          <form action={register}>
-            <label htmlFor="firstName">First name</label>
-            <input id="firstName" name="firstName" type="text" autoComplete="given-name" required />
-            <label htmlFor="lastName">Surname</label>
-            <input id="lastName" name="lastName" type="text" autoComplete="family-name" required />
-            <label htmlFor="email">Email address</label>
-            <input id="email" name="email" type="email" autoComplete="email" required />
-            <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" autoComplete="new-password" minLength={8} required />
-            <button className="button" type="submit" disabled={!configured}>Create account <ArrowRight size={18} /></button>
-          </form>
+          <RegistrationForm configured={configured} />
           <p className="portal-help">Already registered? <Link href="/portal">Sign in</Link></p>
         </section>
       </div>
