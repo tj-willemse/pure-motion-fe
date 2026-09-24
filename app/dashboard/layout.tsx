@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { DashboardSidebar } from "@/components/dashboard-sidebar";
 import { requireDashboardUser } from "@/lib/dashboard";
 
@@ -18,19 +17,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <div className="dashboard-shell">
       <DashboardSidebar name={name} email={user.email} role={user.role} />
       <div className="dashboard-workspace">
-        <header className="dashboard-topbar">
-          <div>
-            <span>{user.role === "client" ? "Member portal" : `${user.role} portal`}</span>
-            <strong>{name || user.email}</strong>
-          </div>
-          <LinkToWebsite />
-        </header>
         {children}
       </div>
     </div>
   );
-}
-
-function LinkToWebsite() {
-  return <Link href="/">View website</Link>;
 }

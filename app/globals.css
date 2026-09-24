@@ -5669,37 +5669,6 @@ div[id] {
   margin-left: 252px;
 }
 
-.dashboard-topbar {
-  display: flex;
-  min-height: 78px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 42px;
-  border-bottom: 1px solid #deddd7;
-  background: rgba(255, 255, 255, 0.86);
-}
-
-.dashboard-topbar > div {
-  display: flex;
-  flex-direction: column;
-}
-
-.dashboard-topbar span {
-  color: #777a74;
-  font-size: 0.62rem;
-  text-transform: capitalize;
-}
-
-.dashboard-topbar strong {
-  font-size: 0.82rem;
-}
-
-.dashboard-topbar a {
-  color: #454943;
-  font-size: 0.7rem;
-  font-weight: 700;
-}
-
 .dashboard-content {
   max-width: 1420px;
   margin-inline: auto;
