@@ -50,7 +50,14 @@ export async function signIn(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(result.data);
 
-  if (error) portalRedirect("error", "We could not sign you in with those details.");
+  if (error?.code === "email_not_confirmed" || error?.message.toLowerCase().includes("email not confirmed")) {
+    portalRedirect(
+      "error",
+      "Please verify your email before signing in. Check your inbox for the confirmation link.",
+    );
+  }
+
+  if (error) portalRedirect("error", "The email address or password is incorrect.");
 
   revalidatePath("/", "layout");
   portalRedirect("message", "Welcome back.");

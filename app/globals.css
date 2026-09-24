@@ -5435,6 +5435,31 @@ div[id] {
   margin-top: 7px;
 }
 
+.button[aria-busy="true"] {
+  cursor: wait;
+}
+
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: button-spin 0.7s linear infinite;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button-spinner {
+    animation-duration: 1.4s;
+  }
+}
+
 .portal-help {
   margin-top: 24px;
   text-align: center;

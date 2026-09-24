@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, LogOut } from "lucide-react";
 import { signIn, signOut } from "@/app/auth/actions";
 import { ToastMessage } from "@/components/toast-message";
+import { PendingSubmitButton } from "@/components/pending-submit-button";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 
@@ -57,7 +58,9 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
               <div><span>Profile</span><strong>{profile ? "Ready" : "Database migration required"}</strong></div>
             </div>
             <form action={signOut}>
-              <button className="button button-outline" type="submit">Sign out <LogOut size={17} /></button>
+              <PendingSubmitButton className="button button-outline" pendingLabel="Signing out…">
+                Sign out <LogOut size={17} />
+              </PendingSubmitButton>
             </form>
           </section>
         ) : (
@@ -70,7 +73,9 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
               <input id="email" name="email" type="email" placeholder="you@example.com" autoComplete="email" required />
               <label htmlFor="password">Password</label>
               <input id="password" name="password" type="password" placeholder="Enter your password" autoComplete="current-password" minLength={8} required />
-              <button className="button" type="submit" disabled={!configured}>Sign in <ArrowRight size={18} /></button>
+              <PendingSubmitButton pendingLabel="Signing in…" disabled={!configured}>
+                Sign in <ArrowRight size={18} />
+              </PendingSubmitButton>
             </form>
             <p className="portal-help">New to Pure Motion? <Link href="/portal/register">Create your account</Link></p>
           </section>

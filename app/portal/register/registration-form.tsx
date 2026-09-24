@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { register } from "@/app/auth/actions";
+import { PendingSubmitButton } from "@/components/pending-submit-button";
 
 const passwordChecks = [
   (value: string) => value.length >= 10,
@@ -93,9 +94,9 @@ export function RegistrationForm({ configured }: { configured: boolean }) {
           {showConfirmation ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
       </div>
-      <button className="button" type="submit" disabled={!configured}>
+      <PendingSubmitButton pendingLabel="Creating account…" disabled={!configured}>
         Create account <ArrowRight size={18} />
-      </button>
+      </PendingSubmitButton>
     </form>
   );
 }
