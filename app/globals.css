@@ -5294,53 +5294,11 @@ div[id] {
   font-weight: 620;
 }
 
-.portal-benefits {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-
-.portal-benefits > div {
-  display: grid;
-  align-items: start;
-  color: #ffad86;
-  grid-template-columns: 28px 1fr;
-  gap: 12px;
-}
-
-.portal-benefits span {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.portal-benefits strong {
-  color: white;
-  font-size: 0.87rem;
-}
-
-.portal-benefits small {
-  color: rgba(255, 255, 255, 0.52);
-  font-size: 0.69rem;
-}
-
 .sign-in-card {
   display: flex;
   justify-content: center;
   padding: 58px 50px;
   flex-direction: column;
-}
-
-.prototype-pill {
-  align-self: flex-start;
-  margin-bottom: 24px;
-  padding: 7px 10px;
-  border-radius: 99px;
-  background: var(--orange-soft);
-  color: var(--orange-dark);
-  font-size: 0.62rem;
-  font-weight: 750;
-  text-transform: uppercase;
 }
 
 .sign-in-card h2 {

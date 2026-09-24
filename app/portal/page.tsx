@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CalendarDays, LockKeyhole, LogOut, UserRound } from "lucide-react";
+import { ArrowRight, LogOut } from "lucide-react";
 import { signIn, signOut } from "@/app/auth/actions";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
@@ -43,15 +43,9 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
       <div className="portal-shell">
         <section className="portal-promise">
           <h1>Everything around your coaching, in one place.</h1>
-          <div className="portal-benefits">
-            <div><CalendarDays size={21} /><span><strong>Upcoming sessions</strong><small>View dates, times and locations.</small></span></div>
-            <div><UserRound size={21} /><span><strong>Your coaching account</strong><small>Manage your details and booking history.</small></span></div>
-            <div><LockKeyhole size={21} /><span><strong>Secure access</strong><small>Your personal information stays protected.</small></span></div>
-          </div>
         </section>
         {claims ? (
           <section className="sign-in-card portal-account-card">
-            <div className="prototype-pill">Account connected</div>
             <p className="portal-eyebrow">Signed in as</p>
             <h2>{displayName || claims.email || "Pure Motion member"}</h2>
             <p>{claims.email}</p>
@@ -66,7 +60,6 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
           </section>
         ) : (
           <section className="sign-in-card">
-            <div className="prototype-pill">Secure portal</div>
             <h2>Welcome back.</h2>
             <p>Sign in to your Pure Motion account.</p>
             {error && <p className="portal-alert portal-alert-error">{error}</p>}

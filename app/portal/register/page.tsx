@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { register } from "@/app/auth/actions";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
@@ -23,12 +23,8 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
       <div className="portal-shell portal-shell-compact">
         <section className="portal-promise">
           <h1>Your golf household, organised.</h1>
-          <div className="portal-benefits">
-            <div><ShieldCheck size={21} /><span><strong>One secure account</strong><small>Manage your own profile and junior golfers together.</small></span></div>
-          </div>
         </section>
         <section className="sign-in-card">
-          <div className="prototype-pill">Secure registration</div>
           <h2>Create your account.</h2>
           <p>Start with the parent, guardian or adult golfer&apos;s details.</p>
           {error && <p className="portal-alert portal-alert-error">{error}</p>}
