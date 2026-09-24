@@ -34,11 +34,15 @@ function portalRedirect(type: "error" | "message", message: string, path = "/por
   redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
 
+function formText(formData: FormData, field: string) {
+  const value = formData.get(field);
+  return typeof value === "string" ? value : "";
+}
+
 export async function signIn(formData: FormData) {
   const result = loginSchema.safeParse({
-    email: formData.get("email"),
-    password: formData.get("password"),
-    confirmPassword: formData.get("confirmPassword"),
+    email: formText(formData, "email"),
+    password: formText(formData, "password"),
   });
 
   if (!result.success) portalRedirect("error", result.error.issues[0].message);
@@ -54,10 +58,11 @@ export async function signIn(formData: FormData) {
 
 export async function register(formData: FormData) {
   const result = registrationSchema.safeParse({
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    password: formData.get("password"),
+    firstName: formText(formData, "firstName"),
+    lastName: formText(formData, "lastName"),
+    email: formText(formData, "email"),
+    password: formText(formData, "password"),
+    confirmPassword: formText(formData, "confirmPassword"),
   });
 
   if (!result.success) {
@@ -79,7 +84,13 @@ export async function register(formData: FormData) {
     },
   });
 
-  if (error) portalRedirect("error", error.message, "/portal/register");
+  if (error) {
+    portalRedirect(
+      "error",
+      "We could not create your account. Check your details or sign in if you already registered.",
+      "/portal/register",
+    );
+  }
 
   portalRedirect(
     "message",
