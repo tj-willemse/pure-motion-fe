@@ -5390,6 +5390,78 @@ div[id] {
   font-weight: 700;
 }
 
+.portal-alert {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border: 1px solid #e6d3b5;
+  border-radius: 8px;
+  background: #fff9eb;
+  color: #72531f !important;
+  line-height: 1.5;
+}
+
+.portal-alert-error {
+  border-color: #efc1b7;
+  background: #fff1ed;
+  color: #9a351e !important;
+}
+
+.portal-alert-success {
+  border-color: #b8d7c8;
+  background: #edf8f2;
+  color: #245c43 !important;
+}
+
+.portal-shell-compact {
+  min-height: 670px;
+}
+
+.portal-account-card h2 {
+  margin-bottom: 4px;
+}
+
+.portal-eyebrow {
+  margin-bottom: 7px;
+  color: var(--orange-dark) !important;
+  font-size: 0.66rem !important;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.portal-account-summary {
+  display: grid;
+  margin: 30px 0;
+  border-top: 1px solid var(--line);
+}
+
+.portal-account-summary > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+  gap: 20px;
+}
+
+.portal-account-summary span {
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.portal-account-summary strong {
+  text-align: right;
+  font-size: 0.74rem;
+  text-transform: capitalize;
+}
+
+.portal-account-card form .button {
+  color: var(--ink);
+}
+
+.portal-account-card form .button:hover {
+  color: white;
+}
+
 /* Footer */
 .site-footer {
   padding: 74px 0 26px;

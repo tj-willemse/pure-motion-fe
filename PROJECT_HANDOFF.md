@@ -47,7 +47,11 @@ npm run build
 npm run start
 ```
 
-Important: this directory currently does **not** appear to be a Git repository. Before further major development, initialise Git or move the project into its intended repository so changes can be reviewed and recovered safely.
+The project is now tracked in Git and pushed to:
+
+```text
+https://github.com/tj-willemse/pure-motion-fe
+```
 
 ## 3. Technology and architecture
 
@@ -56,10 +60,13 @@ Important: this directory currently does **not** appear to be a Git repository. 
 - TypeScript 5.9
 - Tailwind CSS 4 is installed, but most design work is implemented as custom CSS in `app/globals.css`
 - Lucide React supplies interface icons
+- Supabase JavaScript and SSR packages provide the authentication client foundation
+- Zod validates authentication form input on the server
 - `next/image` is used for image optimisation
 - DM Sans is loaded with `next/font`
 - The content model is currently static TypeScript data, not a CMS
-- No backend, database, test suite, authentication provider, payment provider, or booking API is connected
+- The Supabase-ready authentication and role foundation is implemented locally, but the intended live Supabase project still needs its migration applied and environment values configured
+- No payment provider, live booking API or automated test suite is connected yet
 
 Important files:
 
@@ -69,6 +76,9 @@ app/globals.css                Main visual system and responsive styles
 components/site-header.tsx     Desktop/mobile navigation and sticky behaviour
 components/site-footer.tsx     Footer, contact, locations and social links
 components/booking-flow.tsx    Four-step frontend booking prototype
+lib/supabase/                  Browser/server clients and session refresh logic
+app/auth/                      Authentication actions and confirmation callback
+supabase/migrations/           Reviewed database migrations awaiting live application
 lib/site.ts                    Navigation, coaches, services and site constants
 public/brand/                  Logo assets
 public/images/                 Optimised WebP website imagery
@@ -168,7 +178,8 @@ Current rules:
 | `/events` | Built | Contact information, upcoming events, AIM Series, AIMtoGIVE, Google Calendar embed, results links, achievements and feedback/review CTA |
 | `/driving-range` | Built | Full-image driving-range hero, facilities, bucket prices, packages, process, sharing/biometric access information and CTA |
 | `/book` | Frontend prototype | Four-step selection for service, location, coach, date and time; accepts service/coach/location query parameters |
-| `/portal` | Interface preview | Static sign-in interface and benefits; no real authentication |
+| `/portal` | Auth foundation built | Supabase sign-in/sign-out and role-aware account state; awaiting live project configuration |
+| `/portal/register` | Auth foundation built | Customer registration and confirmation-email flow |
 | `/_not-found` | Built | Custom not-found handling |
 
 SEO/supporting routes are also implemented:
@@ -249,7 +260,7 @@ It does **not** currently:
 - Connect to a customer account
 - Handle cancellations/rescheduling
 
-The portal is also a static interface preview. Its form does not authenticate or submit to a server.
+The portal now has working Supabase SSR authentication code, registration, confirmation and sign-out actions. It remains inactive until the intended Supabase project URL/publishable key are added and the auth migration is applied.
 
 ## 10. Remaining work, prioritised
 
@@ -301,7 +312,7 @@ The portal is also a static interface preview. Its form does not authenticate or
 
 ### Priority 6 — Deployment and operations
 
-- Put the project under Git source control.
+- Keep all backend milestones committed and pushed to the connected GitHub repository.
 - Configure the production `NEXT_PUBLIC_SITE_URL`.
 - Select and configure hosting (for example Vercel).
 - Confirm domain/DNS and canonical URL behaviour.
