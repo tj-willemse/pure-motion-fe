@@ -1,5 +1,12 @@
+const configuredSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+  process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() ||
+  "https://puremotiongolf.com";
+
 export const siteUrl = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://puremotiongolf.com"
+  configuredSiteUrl.startsWith("http")
+    ? configuredSiteUrl
+    : `https://${configuredSiteUrl}`
 ).replace(/\/$/, "");
 
 export const site = {
