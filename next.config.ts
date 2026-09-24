@@ -2,8 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
+  devIndicators: false,
   images: {
     formats: ["image/avif", "image/webp"],
+  },
+  logging: {
+    browserToTerminal: false,
   },
   poweredByHeader: false,
   reactStrictMode: true,
