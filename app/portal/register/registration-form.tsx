@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { register } from "@/app/auth/actions";
 
 const passwordChecks = [
@@ -15,6 +15,8 @@ const strengthLabels = ["Very weak", "Weak", "Fair", "Good", "Strong"];
 
 export function RegistrationForm({ configured }: { configured: boolean }) {
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const strength = passwordChecks.filter((check) => check(password)).length;
 
   return (
@@ -26,17 +28,28 @@ export function RegistrationForm({ configured }: { configured: boolean }) {
       <label htmlFor="email">Email address</label>
       <input id="email" name="email" type="email" autoComplete="email" required />
       <label htmlFor="password">Password</label>
-      <input
-        id="password"
-        name="password"
-        type="password"
-        autoComplete="new-password"
-        minLength={10}
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-        aria-describedby={password ? "password-strength password-requirements" : undefined}
-        required
-      />
+      <div className="password-field">
+        <input
+          id="password"
+          name="password"
+          type={showPassword ? "text" : "password"}
+          autoComplete="new-password"
+          minLength={10}
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          aria-describedby={password ? "password-strength password-requirements" : undefined}
+          required
+        />
+        <button
+          className="password-toggle"
+          type="button"
+          onClick={() => setShowPassword((visible) => !visible)}
+          aria-label={showPassword ? "Hide password" : "Show password"}
+          aria-pressed={showPassword}
+        >
+          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      </div>
       {password && (
         <div className="password-feedback">
           <div className="password-strength-heading" id="password-strength" aria-live="polite">
@@ -61,14 +74,25 @@ export function RegistrationForm({ configured }: { configured: boolean }) {
         </div>
       )}
       <label htmlFor="confirmPassword">Confirm password</label>
-      <input
-        id="confirmPassword"
-        name="confirmPassword"
-        type="password"
-        autoComplete="new-password"
-        minLength={10}
-        required
-      />
+      <div className="password-field">
+        <input
+          id="confirmPassword"
+          name="confirmPassword"
+          type={showConfirmation ? "text" : "password"}
+          autoComplete="new-password"
+          minLength={10}
+          required
+        />
+        <button
+          className="password-toggle"
+          type="button"
+          onClick={() => setShowConfirmation((visible) => !visible)}
+          aria-label={showConfirmation ? "Hide confirmation password" : "Show confirmation password"}
+          aria-pressed={showConfirmation}
+        >
+          {showConfirmation ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      </div>
       <button className="button" type="submit" disabled={!configured}>
         Create account <ArrowRight size={18} />
       </button>

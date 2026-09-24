@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, LogOut } from "lucide-react";
 import { signIn, signOut } from "@/app/auth/actions";
+import { ToastMessage } from "@/components/toast-message";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 
@@ -40,6 +41,7 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
 
   return (
     <main id="main-content" className="portal-page">
+      <ToastMessage error={error} message={message} />
       <div className="portal-shell">
         <section className="portal-promise">
           <h1>Everything around your coaching, in one place.</h1>
@@ -62,8 +64,6 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
           <section className="sign-in-card">
             <h2>Welcome back.</h2>
             <p>Sign in to your Pure Motion account.</p>
-            {error && <p className="portal-alert portal-alert-error">{error}</p>}
-            {message && <p className="portal-alert portal-alert-success">{message}</p>}
             {!configured && <p className="portal-alert">The portal UI is ready. Add the Supabase project URL and publishable key to activate sign-in.</p>}
             <form action={signIn}>
               <label htmlFor="email">Email address</label>

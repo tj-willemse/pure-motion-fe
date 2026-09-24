@@ -49,7 +49,7 @@ export async function signIn(formData: FormData) {
   if (error) portalRedirect("error", "We could not sign you in with those details.");
 
   revalidatePath("/", "layout");
-  redirect("/portal");
+  portalRedirect("message", "Welcome back.");
 }
 
 export async function register(formData: FormData) {
@@ -92,5 +92,5 @@ export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   revalidatePath("/", "layout");
-  redirect("/portal");
+  portalRedirect("message", "You have signed out.");
 }

@@ -5333,6 +5333,41 @@ div[id] {
   font-size: 0.82rem;
 }
 
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 0;
+  right: 7px;
+  display: inline-flex;
+  width: 40px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.password-toggle:hover,
+.password-toggle:focus-visible {
+  color: var(--ink);
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: -5px;
+  border-radius: 8px;
+}
+
 .password-feedback {
   margin: -7px 0 18px;
 }
@@ -5370,6 +5405,29 @@ div[id] {
   color: var(--muted);
   font-size: 0.66rem;
   line-height: 1.5;
+}
+
+.app-toast {
+  border: 1px solid var(--line) !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: var(--ink) !important;
+  box-shadow: 0 18px 50px rgba(8, 14, 11, 0.16) !important;
+  font-family: var(--font-sans), sans-serif !important;
+}
+
+.app-toast-title {
+  font-weight: 700 !important;
+}
+
+.app-toast-description {
+  color: var(--muted) !important;
+}
+
+.app-toast-close {
+  border-color: var(--line) !important;
+  background: #fff !important;
+  color: var(--ink) !important;
 }
 
 .sign-in-card form .button {
