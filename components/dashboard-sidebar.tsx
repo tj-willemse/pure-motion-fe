@@ -3,11 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LogOut, Menu, X } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { signOut } from "@/app/auth/actions";
 import { dashboardNavigation, type DashboardRole } from "@/lib/dashboard-navigation";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
+import { DashboardSkeleton } from "@/components/dashboard-skeleton";
 
 type DashboardSidebarProps = {
   name: string;
@@ -17,7 +18,9 @@ type DashboardSidebarProps = {
 
 export function DashboardSidebar({ name, email, role }: DashboardSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [isNavigating, startNavigation] = useTransition();
   const nav = dashboardNavigation[role];
   const initials = name
     .split(" ")
@@ -58,7 +61,13 @@ export function DashboardSidebar({ name, email, role }: DashboardSidebarProps) {
                 href={item.href}
                 className={active ? "is-active" : ""}
                 aria-current={active ? "page" : undefined}
-                onClick={() => setOpen(false)}
+                onClick={(event) => {
+                  setOpen(false);
+                  if (!active && !event.metaKey && !event.ctrlKey && !event.shiftKey && event.button === 0) {
+                    event.preventDefault();
+                    startNavigation(() => router.push(item.href));
+                  }
+                }}
               >
                 {item.label}
               </Link>
@@ -81,6 +90,7 @@ export function DashboardSidebar({ name, email, role }: DashboardSidebarProps) {
         </form>
       </aside>
       {open && <button className="dashboard-sidebar-scrim" type="button" aria-label="Close dashboard menu" onClick={() => setOpen(false)} />}
+      {isNavigating && <DashboardSkeleton navigation />}
     </>
   );
 }
