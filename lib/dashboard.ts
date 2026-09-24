@@ -1,10 +1,11 @@
 import "server-only";
 
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPrimaryRole } from "@/lib/dashboard-navigation";
 
-export async function requireDashboardUser() {
+export const requireDashboardUser = cache(async function requireDashboardUser() {
   const supabase = await createClient();
   const claims = (await supabase.auth.getClaims()).data?.claims;
 
@@ -35,4 +36,4 @@ export async function requireDashboardUser() {
     roles,
     role: getPrimaryRole(roles),
   };
-}
+});
