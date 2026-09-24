@@ -5,7 +5,7 @@ import { Toaster } from "sonner";
 export function AppToaster() {
   return (
     <Toaster
-      position="top-right"
+      position="bottom-right"
       closeButton
       duration={4500}
       gap={10}
