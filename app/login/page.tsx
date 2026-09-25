@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { signIn } from "@/app/auth/actions";
 import { ToastMessage } from "@/components/toast-message";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
@@ -70,6 +70,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 Sign in <ArrowRight size={18} />
               </PendingSubmitButton>
             </form>
+            <Link href="/" className="button button-outline auth-back-button">
+              <ArrowLeft size={18} aria-hidden="true" /> Back to website
+            </Link>
             <p className="portal-help">New to Pure Motion? <Link href="/register">Create your account</Link></p>
           </div>
         </section>

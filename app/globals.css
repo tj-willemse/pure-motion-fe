@@ -5469,6 +5469,11 @@ div[id] {
   margin-top: 7px;
 }
 
+.auth-back-button {
+  width: 100%;
+  margin-top: 12px;
+}
+
 .button[aria-busy="true"] {
   cursor: wait;
 }
