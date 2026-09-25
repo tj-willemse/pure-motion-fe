@@ -22,10 +22,16 @@ export function RegistrationForm({ configured }: { configured: boolean }) {
 
   return (
     <form action={register}>
-      <label htmlFor="firstName">First name</label>
-      <input id="firstName" name="firstName" type="text" autoComplete="given-name" required />
-      <label htmlFor="lastName">Surname</label>
-      <input id="lastName" name="lastName" type="text" autoComplete="family-name" required />
+      <div className="auth-name-fields">
+        <div>
+          <label htmlFor="firstName">First name</label>
+          <input id="firstName" name="firstName" type="text" autoComplete="given-name" required />
+        </div>
+        <div>
+          <label htmlFor="lastName">Surname</label>
+          <input id="lastName" name="lastName" type="text" autoComplete="family-name" required />
+        </div>
+      </div>
       <label htmlFor="email">Email address</label>
       <input id="email" name="email" type="email" autoComplete="email" required />
       <label htmlFor="password">Password</label>

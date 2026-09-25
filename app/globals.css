@@ -5427,6 +5427,22 @@ div[id] {
   font-weight: 700;
 }
 
+.auth-name-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.auth-name-fields > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.auth-name-fields input {
+  width: 100%;
+}
+
 .sign-in-card input {
   min-height: 50px;
   margin-bottom: 18px;
@@ -8010,6 +8026,11 @@ div[id] {
 
   .social-auth-buttons {
     grid-template-columns: 1fr;
+  }
+
+  .auth-name-fields {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 }
 
