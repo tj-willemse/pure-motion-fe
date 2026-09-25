@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { RegistrationForm } from "@/app/portal/register/registration-form";
 import { ToastMessage } from "@/components/toast-message";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -44,6 +45,9 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
             <p>Start with the parent, guardian or adult golfer&apos;s details.</p>
             {!configured && <p className="portal-alert">Supabase connection details are still required before registration can be used.</p>}
             <RegistrationForm configured={configured} />
+            <Link href="/" className="button button-outline auth-back-button">
+              <ArrowLeft size={18} aria-hidden="true" /> Back to website
+            </Link>
             <p className="portal-help">Already registered? <Link href="/login">Sign in</Link></p>
           </div>
         </section>
