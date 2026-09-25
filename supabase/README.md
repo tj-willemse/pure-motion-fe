@@ -12,6 +12,26 @@ The frontend uses Supabase Auth with cookie-based SSR sessions.
 
 Never add the database password, secret key or service-role key to a `NEXT_PUBLIC_` variable.
 
+## Google and Apple sign-in
+
+Email/password, Google and Apple all use the same Supabase user. Supabase automatically links a social identity to an existing account when the provider returns the same verified email. The application keeps one profile per Supabase user ID and the social-auth migration makes profile/role creation idempotent, so do not build a second Google- or Apple-specific customer table.
+
+In **Authentication → Sign In / Providers**:
+
+1. Keep Email enabled.
+2. Configure Google with the client ID and secret from Google Cloud.
+3. Configure Apple with the Services ID and signing secret from Apple Developer.
+4. Use the Supabase callback shown in each provider panel as the provider's authorized redirect URI. For this project it follows `https://qlcoexpjyfoumryymuur.supabase.co/auth/v1/callback`.
+
+In **Authentication → URL Configuration**, add these application redirects:
+
+- `http://localhost:3000/auth/callback`
+- `http://127.0.0.1:3000/auth/callback`
+- `https://pure-motion-fe.vercel.app/auth/callback`
+- `https://puremotiongolf.com/auth/callback` when the production domain is connected
+
+Also retain the matching `/auth/confirm` URLs for email confirmation. OAuth secrets belong only in Supabase/provider settings; they must never be added to this repository or exposed as `NEXT_PUBLIC_` variables.
+
 ## First administrator
 
 Every new account receives the `client` role automatically. After the first trusted administrator registers, bootstrap that role from the Supabase SQL editor:

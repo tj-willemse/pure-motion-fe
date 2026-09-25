@@ -6,6 +6,7 @@ import { signIn } from "@/app/auth/actions";
 import { ToastMessage } from "@/components/toast-message";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
 import { PasswordInput } from "@/components/password-input";
+import { SocialAuthButtons } from "@/components/social-auth-buttons";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -55,6 +56,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <h2>Welcome back.</h2>
             <p>Sign in to your Pure Motion account.</p>
             {!configured && <p className="portal-alert">The portal UI is ready. Add the Supabase project URL and publishable key to activate sign-in.</p>}
+            {configured && <SocialAuthButtons />}
             <form action={signIn}>
               <label htmlFor="email">Email address</label>
               <input id="email" name="email" type="email" placeholder="you@example.com" autoComplete="email" required />
