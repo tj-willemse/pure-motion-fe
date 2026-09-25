@@ -131,7 +131,6 @@ async function Overview({ user }: { user: Awaited<ReturnType<typeof requireDashb
     const { count: familyCount = 0 } = await user.supabase.from("dependents").select("id", { count: "exact", head: true });
     return (
       <>
-        <PageHeader title="Overview" description="Your lessons, requests and family golfers." />
         {showingDemo && <DemoNotice />}
         <div className="dashboard-stats">
           <Stat label="Upcoming bookings" value={String(upcoming.length)} />
@@ -151,7 +150,6 @@ async function Overview({ user }: { user: Awaited<ReturnType<typeof requireDashb
     const clientCount = new Set(bookings.map((item) => item.client_id)).size;
     return (
       <>
-        <PageHeader title="Overview" description="Your coaching schedule and current clients." />
         {showingDemo && <DemoNotice />}
         <div className="dashboard-stats">
           <Stat label="Today" value={String(todayBookings.length)} />
@@ -175,7 +173,6 @@ async function Overview({ user }: { user: Awaited<ReturnType<typeof requireDashb
   const pendingCount = showingDemo ? bookings.filter((booking) => booking.status === "pending").length : livePendingCount;
   return (
     <>
-      <PageHeader title="Overview" description="Bookings, people and coaching operations." />
       {showingDemo && <DemoNotice />}
       <div className="dashboard-stats">
         <Stat label="People" value={String(peopleCount ?? 0)} />
@@ -203,7 +200,6 @@ async function Bookings({ user }: { user: Awaited<ReturnType<typeof requireDashb
       : demoPeople.filter((person) => person.roles.includes("coach")).map(({ id, first_name, last_name }) => ({ id, first_name, last_name }));
     return (
       <>
-        <PageHeader title="Bookings" description="Review requests and update booking status." />
         {showingDemo && <DemoNotice />}
         <Panel title="All bookings">
           {bookings.length ? <BookingTable bookings={bookings} staff coaches={coaches ?? []} /> : <Empty text="No bookings have been created." />}
@@ -224,7 +220,6 @@ async function Bookings({ user }: { user: Awaited<ReturnType<typeof requireDashb
     : { data: [] };
   return (
       <>
-      <PageHeader title="Bookings" description="Request a lesson and track its status." />
       {showingDemo && <DemoNotice />}
       <div className="dashboard-two-column">
         <Panel title="Request a booking">
@@ -278,7 +273,6 @@ async function Family({ user }: { user: Awaited<ReturnType<typeof requireDashboa
   const dependents = data?.length ? data.map((item) => ({ ...item, isDemo: false })) : demoFamily;
   return (
     <>
-      <PageHeader title="Family" description="Add junior golfers or other family members managed from your account." />
       {showingDemo && <DemoNotice />}
       <div className="dashboard-two-column">
         <Panel title="Add family member">
@@ -315,7 +309,6 @@ async function Family({ user }: { user: Awaited<ReturnType<typeof requireDashboa
 function Profile({ user }: { user: Awaited<ReturnType<typeof requireDashboardUser>> }) {
   return (
     <>
-      <PageHeader title="Profile" description="Update the contact details used for bookings." />
       <Panel title="Personal details" narrow>
         <form action={updateProfile} className="dashboard-form">
           <div className="dashboard-form-row">
@@ -336,7 +329,6 @@ async function Schedule({ user }: { user: Awaited<ReturnType<typeof requireDashb
   const showingDemo = bookings.some((item) => item.isDemo);
   return (
     <>
-      <PageHeader title="Schedule" description="Your assigned lessons and assessments." />
       {showingDemo && <DemoNotice />}
       <Panel title="Sessions">
         {bookings.length ? <BookingTable bookings={bookings} staff /> : <Empty text="No sessions are assigned to you." />}
@@ -361,7 +353,6 @@ async function Availability({ user }: { user: Awaited<ReturnType<typeof requireD
   const locations = new Map([...(locationsResult.data ?? []), ...demoLocations].map((location) => [location.id, location.name]));
   return (
     <>
-      <PageHeader title="Availability" description="Set the weekly times clients and operations can use for bookings." />
       {showingDemo && <DemoNotice />}
       <div className="dashboard-two-column">
         <Panel title="Add weekly hours">
@@ -406,7 +397,6 @@ async function Clients({ user }: { user: Awaited<ReturnType<typeof requireDashbo
   const clients = [...new Map(bookings.map((booking) => [booking.client_id, { id: booking.client_id, name: booking.clientName }])).values()];
   return (
     <>
-      <PageHeader title="Clients" description="People with sessions assigned to you." />
       {showingDemo && <DemoNotice />}
       <Panel title="Client list">
         {clients.length ? <div className="dashboard-list">{clients.map((client) => <div className="dashboard-list-row" key={client.id}><div><strong>{client.name}</strong><span>{bookings.filter((booking) => booking.client_id === client.id).length} booking(s)</span></div></div>)}</div> : <Empty text="No clients are assigned yet." />}
@@ -429,7 +419,6 @@ async function People({ user }: { user: Awaited<ReturnType<typeof requireDashboa
   demoPeople.forEach((person) => roleMap.set(person.id, person.roles));
   return (
     <>
-      <PageHeader title="People" description="Accounts, contact details and portal access." />
       {showingDemo && <DemoNotice />}
       <Panel title="Accounts">
         <div className="dashboard-table-wrap"><table className="dashboard-table"><thead><tr><th>Name</th><th>Contact</th><th>Access</th>{user.role === "admin" && <th>Change access</th>}</tr></thead><tbody>{profiles.map((profile) => <tr key={profile.id}><td><strong>{[profile.first_name, profile.last_name].filter(Boolean).join(" ") || "Unnamed account"}</strong></td><td>{profile.email}<small>{profile.phone || "No phone"}</small></td><td>{(roleMap.get(profile.id) ?? ["client"]).join(", ")}</td>{user.role === "admin" && <td>{profile.isDemo ? <span className="dashboard-demo-row">Sample account</span> : <form action={setUserRole} className="role-form"><input type="hidden" name="userId" value={profile.id} /><select name="role" defaultValue="coach"><option value="client">Client</option><option value="coach">Coach</option><option value="receptionist">Receptionist</option><option value="admin">Admin</option></select><PendingSubmitButton className="dashboard-table-action" pendingLabel="Saving…" name="mode" value="add">Add</PendingSubmitButton><PendingSubmitButton className="dashboard-table-action is-muted" pendingLabel="Saving…" name="mode" value="remove">Remove</PendingSubmitButton></form>}</td>}</tr>)}</tbody></table></div>
@@ -443,7 +432,6 @@ async function Services({ user }: { user: Awaited<ReturnType<typeof requireDashb
   const services = data ?? [];
   return (
     <>
-      <PageHeader title="Services" description="Lesson duration, pricing and booking availability." />
       <div className="dashboard-service-grid">{services.map((service) => <Panel key={service.id} title={service.name}><form action={updateService} className="dashboard-form compact"><input type="hidden" name="serviceId" value={service.id} /><Field label="Name"><input name="name" defaultValue={service.name} required /></Field><div className="dashboard-form-row"><Field label="Minutes"><input name="duration" type="number" min="15" defaultValue={service.duration_minutes} required /></Field><Field label="Price (R)"><input name="price" type="number" min="0" step="0.01" defaultValue={(service.price_cents / 100).toFixed(2)} required /></Field></div><label className="dashboard-checkbox"><input name="active" type="checkbox" defaultChecked={service.is_active} />Available for booking</label><PendingSubmitButton pendingLabel="Saving…">Save service</PendingSubmitButton></form></Panel>)}</div>
     </>
   );
@@ -455,7 +443,6 @@ async function Audit({ user }: { user: Awaited<ReturnType<typeof requireDashboar
   const events = data?.length ? data : demoAuditEvents;
   return (
     <>
-      <PageHeader title="Audit log" description="Recent account and operations changes." />
       {showingDemo && <DemoNotice />}
       <Panel title="Recent activity">
         {events.length ? <div className="dashboard-table-wrap"><table className="dashboard-table"><thead><tr><th>Date</th><th>Action</th><th>Entity</th><th>Actor</th></tr></thead><tbody>{events.map((event) => <tr key={event.id}><td>{formatDateTime(event.created_at)}</td><td>{event.action.replaceAll(".", " ")}</td><td>{event.entity_type}{event.entity_id ? ` · ${event.entity_id.slice(0, 8)}` : ""}</td><td>{event.actor_id?.slice(0, 8) || "System"}</td></tr>)}</tbody></table></div> : <Empty text="No audit activity yet." />}
@@ -474,10 +461,6 @@ function BookingTable({ bookings, staff = false, coaches = [] }: { bookings: Awa
 
 function BookingSummary({ booking, showClient = false }: { booking: Awaited<ReturnType<typeof loadBookings>>[number]; showClient?: boolean }) {
   return <div className="booking-summary"><div><span>Date</span><strong>{formatDateTime(booking.starts_at)}</strong></div>{showClient && <div><span>Client</span><strong>{booking.clientName}</strong></div>}<div><span>Service</span><strong>{booking.serviceName}</strong></div><div><span>Coach</span><strong>{booking.coachName}</strong></div><div><span>Location</span><strong>{booking.locationName}</strong></div></div>;
-}
-
-function PageHeader({ title, description }: { title: string; description: string }) {
-  return <header className="dashboard-page-header"><h1>{title}</h1><p>{description}</p></header>;
 }
 
 function DemoNotice() {

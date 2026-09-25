@@ -5769,24 +5769,8 @@ div[id] {
   }
 }
 
-.dashboard-page-header {
-  margin-bottom: 30px;
-}
-
-.dashboard-page-header h1 {
-  margin-bottom: 5px;
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  font-weight: 620;
-  letter-spacing: -0.055em;
-}
-
-.dashboard-page-header p {
-  color: #6e716b;
-  font-size: 0.78rem;
-}
-
 .dashboard-demo-notice {
-  margin: -14px 0 24px;
+  margin: 0 0 24px;
   padding: 11px 14px;
   border-left: 3px solid var(--orange);
   background: #fff7f1;
