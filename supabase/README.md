@@ -32,6 +32,15 @@ In **Authentication → URL Configuration**, add these application redirects:
 
 Also retain the matching `/auth/confirm` URLs for email confirmation. OAuth secrets belong only in Supabase/provider settings; they must never be added to this repository or exposed as `NEXT_PUBLIC_` variables.
 
+Once a provider has been configured and tested, enable its button in the Vercel environment and redeploy:
+
+```ini
+NEXT_PUBLIC_GOOGLE_AUTH_ENABLED=true
+NEXT_PUBLIC_APPLE_AUTH_ENABLED=true
+```
+
+Leave either value `false` until that provider is ready. Its button will remain disabled and display a “Coming soon” tooltip.
+
 ## First administrator
 
 Every new account receives the `client` role automatically. After the first trusted administrator registers, bootstrap that role from the Supabase SQL editor:

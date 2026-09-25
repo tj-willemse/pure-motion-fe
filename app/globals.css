@@ -5345,8 +5345,20 @@ div[id] {
   gap: 10px;
 }
 
+.social-auth-option {
+  position: relative;
+  min-width: 0;
+  border-radius: 8px;
+}
+
+.social-auth-option:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
 .social-auth-button {
   display: inline-flex;
+  width: 100%;
   min-height: 48px;
   align-items: center;
   justify-content: center;
@@ -5380,8 +5392,48 @@ div[id] {
 }
 
 .social-auth-button:disabled {
-  cursor: wait;
+  cursor: not-allowed;
   opacity: 0.65;
+}
+
+.social-auth-button[aria-busy="true"] {
+  cursor: wait;
+}
+
+.social-auth-tooltip {
+  position: absolute;
+  z-index: 4;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: #171714;
+  color: white;
+  font-size: 0.64rem;
+  font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.social-auth-tooltip::after {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  border: 4px solid transparent;
+  border-top-color: #171714;
+  content: "";
+  transform: translateX(-50%);
+}
+
+.social-auth-option:hover .social-auth-tooltip,
+.social-auth-option:focus .social-auth-tooltip,
+.social-auth-option:focus-within .social-auth-tooltip {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 .auth-divider {

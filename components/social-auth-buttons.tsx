@@ -7,6 +7,11 @@ import { createClient } from "@/lib/supabase/client";
 
 type OAuthProvider = "google" | "apple";
 
+const providerEnabled: Record<OAuthProvider, boolean> = {
+  google: process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === "true",
+  apple: process.env.NEXT_PUBLIC_APPLE_AUTH_ENABLED === "true",
+};
+
 function GoogleMark() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -22,6 +27,8 @@ export function SocialAuthButtons() {
   const [pendingProvider, setPendingProvider] = useState<OAuthProvider | null>(null);
 
   async function continueWith(provider: OAuthProvider) {
+    if (!providerEnabled[provider]) return;
+
     setPendingProvider(provider);
 
     const supabase = createClient();
@@ -42,26 +49,40 @@ export function SocialAuthButtons() {
   return (
     <div className="social-auth">
       <div className="social-auth-buttons">
-        <button
-          type="button"
-          className="social-auth-button"
-          onClick={() => continueWith("google")}
-          disabled={pendingProvider !== null}
-          aria-busy={pendingProvider === "google"}
+        <div
+          className="social-auth-option"
+          tabIndex={providerEnabled.google ? undefined : 0}
+          aria-label={providerEnabled.google ? undefined : "Google sign-in coming soon"}
         >
-          {pendingProvider === "google" ? <span className="button-spinner" /> : <GoogleMark />}
-          Continue with Google
-        </button>
-        <button
-          type="button"
-          className="social-auth-button"
-          onClick={() => continueWith("apple")}
-          disabled={pendingProvider !== null}
-          aria-busy={pendingProvider === "apple"}
+          <button
+            type="button"
+            className="social-auth-button"
+            onClick={() => continueWith("google")}
+            disabled={!providerEnabled.google || pendingProvider !== null}
+            aria-busy={pendingProvider === "google"}
+          >
+            {pendingProvider === "google" ? <span className="button-spinner" /> : <GoogleMark />}
+            Continue with Google
+          </button>
+          {!providerEnabled.google && <span className="social-auth-tooltip" role="tooltip">Coming soon</span>}
+        </div>
+        <div
+          className="social-auth-option"
+          tabIndex={providerEnabled.apple ? undefined : 0}
+          aria-label={providerEnabled.apple ? undefined : "Apple sign-in coming soon"}
         >
-          {pendingProvider === "apple" ? <span className="button-spinner" /> : <Apple size={19} strokeWidth={2.2} />}
-          Continue with Apple
-        </button>
+          <button
+            type="button"
+            className="social-auth-button"
+            onClick={() => continueWith("apple")}
+            disabled={!providerEnabled.apple || pendingProvider !== null}
+            aria-busy={pendingProvider === "apple"}
+          >
+            {pendingProvider === "apple" ? <span className="button-spinner" /> : <Apple size={19} strokeWidth={2.2} />}
+            Continue with Apple
+          </button>
+          {!providerEnabled.apple && <span className="social-auth-tooltip" role="tooltip">Coming soon</span>}
+        </div>
       </div>
       <div className="auth-divider" aria-hidden="true">
         <span>or continue with email</span>
