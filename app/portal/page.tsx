@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { signIn } from "@/app/auth/actions";
 import { ToastMessage } from "@/components/toast-message";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
+import { PasswordInput } from "@/components/password-input";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -44,7 +45,13 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
             <label htmlFor="email">Email address</label>
             <input id="email" name="email" type="email" placeholder="you@example.com" autoComplete="email" required />
             <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" placeholder="Enter your password" autoComplete="current-password" minLength={8} required />
+            <PasswordInput
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              minLength={8}
+            />
             <PendingSubmitButton pendingLabel="Signing in…" disabled={!configured}>
               Sign in <ArrowRight size={18} />
             </PendingSubmitButton>
