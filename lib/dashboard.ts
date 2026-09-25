@@ -9,7 +9,7 @@ export const requireDashboardUser = cache(async function requireDashboardUser() 
   const supabase = await createClient();
   const claims = (await supabase.auth.getClaims()).data?.claims;
 
-  if (!claims?.sub) redirect("/portal?error=Please%20sign%20in%20to%20continue.");
+  if (!claims?.sub) redirect("/login?error=Please%20sign%20in%20to%20continue.");
 
   const [profileResult, rolesResult] = await Promise.all([
     supabase

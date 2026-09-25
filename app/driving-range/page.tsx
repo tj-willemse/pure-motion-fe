@@ -219,7 +219,7 @@ export default function DrivingRangePage() {
               <li><Check size={17} /> The system cannot identify which fingerprint collected a bucket</li>
               <li><Check size={17} /> The holder must explain the range rules to every user</li>
             </ul>
-            <Link href="/portal" className="button button-light">Manage package users <ArrowRight size={18} /></Link>
+            <Link href="/login" className="button button-light">Manage package users <ArrowRight size={18} /></Link>
           </div>
           <aside className="range-terms-card">
             <Fingerprint size={28} strokeWidth={1.5} />

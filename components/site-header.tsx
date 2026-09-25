@@ -311,7 +311,7 @@ export function SiteHeader() {
           <Link href="/book" className="button button-small">
             Book a lesson
           </Link>
-          <Link href="/portal" className="portal-link" aria-label="Sign in to your profile">
+          <Link href="/login" className="portal-link" aria-label="Sign in to your profile">
             <UserRound size={18} aria-hidden="true" />
           </Link>
           <button

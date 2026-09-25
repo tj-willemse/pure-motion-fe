@@ -30,7 +30,7 @@ const registrationSchema = z
     path: ["confirmPassword"],
   });
 
-function portalRedirect(type: "error" | "message", message: string, path = "/portal"): never {
+function portalRedirect(type: "error" | "message", message: string, path = "/login"): never {
   redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
 
@@ -73,7 +73,7 @@ export async function register(formData: FormData) {
   });
 
   if (!result.success) {
-    portalRedirect("error", result.error.issues[0].message, "/portal/register");
+    portalRedirect("error", result.error.issues[0].message, "/register");
   }
 
   const requestHeaders = await headers();
@@ -95,14 +95,14 @@ export async function register(formData: FormData) {
     portalRedirect(
       "error",
       "We could not create your account. Check your details or sign in if you already registered.",
-      "/portal/register",
+      "/register",
     );
   }
 
   portalRedirect(
     "message",
     "Check your email to confirm your Pure Motion account.",
-    "/portal",
+    "/login",
   );
 }
 

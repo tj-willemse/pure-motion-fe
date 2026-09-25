@@ -18,6 +18,6 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.redirect(
-    `${origin}/portal?error=${encodeURIComponent("The confirmation link is invalid or has expired.")}`,
+    `${origin}/login?error=${encodeURIComponent("The confirmation link is invalid or has expired.")}`,
   );
 }

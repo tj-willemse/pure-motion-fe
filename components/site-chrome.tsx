@@ -7,7 +7,11 @@ import { SiteHeader } from "@/components/site-header";
 export function SiteChrome({ position }: { position: "header" | "footer" }) {
   const pathname = usePathname();
 
-  if (pathname.startsWith("/dashboard")) return null;
+  if (
+    pathname.startsWith("/dashboard") ||
+    pathname === "/login" ||
+    pathname === "/register"
+  ) return null;
 
   return position === "header" ? <SiteHeader /> : <SiteFooter />;
 }

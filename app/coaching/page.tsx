@@ -207,7 +207,7 @@ export default function CoachingPage() {
               are handled directly by the academy.
             </p>
             <div className="package-actions">
-              <Link href="/portal" className="button button-light">
+              <Link href="/login" className="button button-light">
                 View your portal <ArrowRight size={18} aria-hidden="true" />
               </Link>
               <Link href="/book" className="package-link">Book one lesson</Link>
