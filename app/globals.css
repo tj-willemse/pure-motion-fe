@@ -253,8 +253,8 @@ h2 {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: 76px;
-  padding-block: 13px;
+  min-height: 56px;
+  padding-block: 0;
   grid-template-columns: 30px minmax(0, 1fr);
   column-gap: 12px;
   transition: color 300ms ease;
@@ -316,7 +316,7 @@ h2 {
 .events-page article[id],
 .range-page section[id],
 .range-page article[id] {
-  scroll-margin-top: 162px;
+  scroll-margin-top: 142px;
 }
 
 .section-anchor-marker {
@@ -8068,8 +8068,8 @@ div[id] {
 
   .section-nav-sticky nav a {
     min-width: 180px;
-    min-height: 76px;
-    padding: 14px 18px;
+    min-height: 56px;
+    padding: 0 18px;
     flex: 0 0 180px;
   }
 
@@ -8082,7 +8082,7 @@ div[id] {
   .events-page article[id],
   .range-page section[id],
   .range-page article[id] {
-    scroll-margin-top: 162px;
+    scroll-margin-top: 142px;
   }
 }
 
