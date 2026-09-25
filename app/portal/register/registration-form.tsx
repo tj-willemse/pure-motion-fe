@@ -80,26 +80,30 @@ export function RegistrationForm({ configured }: { configured: boolean }) {
           </p>
         </div>
       )}
-      <label htmlFor="confirmPassword">Confirm password</label>
-      <div className="password-field">
-        <input
-          id="confirmPassword"
-          name="confirmPassword"
-          type={showConfirmation ? "text" : "password"}
-          autoComplete="new-password"
-          minLength={10}
-          required
-        />
-        <button
-          className="password-toggle"
-          type="button"
-          onClick={() => setShowConfirmation((visible) => !visible)}
-          aria-label={showConfirmation ? "Hide confirmation password" : "Show confirmation password"}
-          aria-pressed={showConfirmation}
-        >
-          {showConfirmation ? <EyeOff size={18} /> : <Eye size={18} />}
-        </button>
-      </div>
+      {password && (
+        <div className="confirm-password-reveal">
+          <label htmlFor="confirmPassword">Confirm password</label>
+          <div className="password-field">
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type={showConfirmation ? "text" : "password"}
+              autoComplete="new-password"
+              minLength={10}
+              required
+            />
+            <button
+              className="password-toggle"
+              type="button"
+              onClick={() => setShowConfirmation((visible) => !visible)}
+              aria-label={showConfirmation ? "Hide confirmation password" : "Show confirmation password"}
+              aria-pressed={showConfirmation}
+            >
+              {showConfirmation ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+        </div>
+      )}
       <PendingSubmitButton pendingLabel="Creating account…" disabled={!configured}>
         Create account <ArrowRight size={18} />
       </PendingSubmitButton>

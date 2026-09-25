@@ -5527,6 +5527,24 @@ div[id] {
   line-height: 1.5;
 }
 
+.confirm-password-reveal {
+  display: flex;
+  flex-direction: column;
+  animation: confirm-password-in 180ms ease-out both;
+}
+
+@keyframes confirm-password-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .app-toast {
   border: 1px solid var(--line) !important;
   border-radius: 10px !important;
