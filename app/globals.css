@@ -5598,6 +5598,7 @@ div[id] {
 }
 
 .app-toast {
+  padding-right: 48px !important;
   border: 1px solid var(--line) !important;
   border-radius: 10px !important;
   background: #fff !important;
@@ -5615,9 +5616,13 @@ div[id] {
 }
 
 .app-toast-close {
+  top: 10px !important;
+  right: 10px !important;
+  left: auto !important;
   border-color: var(--line) !important;
   background: #fff !important;
   color: var(--ink) !important;
+  transform: none !important;
 }
 
 .sign-in-card form .button {
