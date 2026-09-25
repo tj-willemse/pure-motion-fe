@@ -20,7 +20,6 @@ export function DashboardSkeleton({ navigation = false }: { navigation?: boolean
         <span />
         <span />
       </div>
-      <p className="dashboard-loading-label">Loading dashboard…</p>
     </main>
   );
 }

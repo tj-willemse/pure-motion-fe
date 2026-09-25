@@ -5951,12 +5951,6 @@ div[id] {
   width: 72%;
 }
 
-.dashboard-loading-label {
-  margin-top: 14px;
-  color: #6e716b;
-  font-size: 0.68rem;
-}
-
 @keyframes dashboard-loading-pulse {
   from { opacity: 0.55; }
   to { opacity: 1; }
