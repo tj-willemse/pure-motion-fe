@@ -11,6 +11,25 @@ const nextConfig: NextConfig = {
   },
   poweredByHeader: false,
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: "/junior-golf/junior-academy/junior-academy-terms",
+        destination: "/juniors/academy-terms",
+        permanent: true,
+      },
+      {
+        source: "/junior-golf/junior-academy/junior-academy-terms/",
+        destination: "/juniors/academy-terms",
+        permanent: true,
+      },
+      {
+        source: "/jamfees",
+        destination: "/juniors/academy-terms#monthly-schedules",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

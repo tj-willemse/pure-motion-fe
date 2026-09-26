@@ -35,6 +35,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${siteUrl}/juniors/academy-terms`,
+      lastModified: new Date("2026-07-18"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: `${siteUrl}/events`,
       lastModified: now,
       changeFrequency: "weekly",

@@ -6,6 +6,7 @@ import {
   CalendarDays,
   Check,
   CircleCheck,
+  FileText,
   Flag,
   GraduationCap,
   ShieldCheck,
@@ -50,6 +51,7 @@ const juniorSections = [
   { label: "Holiday programmes", href: "#holiday-programmes", icon: CalendarDays },
   { label: "School Team Golf", href: "#school-team-golf", icon: UsersRound },
   { label: "Calendar", href: "#calendar", icon: CalendarDays },
+  { label: "Fees & terms", href: "/juniors/academy-terms", icon: FileText },
 ];
 
 const programmes = [
@@ -164,10 +166,10 @@ export default function JuniorsPage() {
       <div className="section-nav-sticky">
         <nav className="site-shell junior-section-nav" aria-label="Junior golf sections">
           {juniorSections.map(({ label, href, icon: Icon }) => (
-            <a href={href} key={href}>
+            <Link href={href} key={href}>
               <Icon size={20} strokeWidth={1.7} aria-hidden="true" />
               <strong>{label}</strong>
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
@@ -271,6 +273,9 @@ export default function JuniorsPage() {
               Membership is not refundable. Lessons are scheduled around public school terms and
               monthly accounts are payable within seven days.
             </p>
+            <Link href="/juniors/academy-terms" className="text-link membership-terms-link">
+              View 2026 fees, schedules and terms <ArrowRight size={17} aria-hidden="true" />
+            </Link>
           </div>
         </div>
       </section>

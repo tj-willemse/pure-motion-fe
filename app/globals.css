@@ -296,7 +296,7 @@ h2 {
 }
 
 .section-nav-sticky .junior-section-nav {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
 .section-nav-sticky .junior-section-nav a:nth-child(4) {
@@ -8116,4 +8116,309 @@ div[id] {
 .section-nav-sticky nav a > svg {
   display: block;
   flex: 0 0 auto;
+}
+
+/* Junior Academy fees, schedules and terms */
+.academy-terms-page { background: var(--paper); }
+
+.academy-terms-hero {
+  overflow: hidden;
+  padding: 96px 0;
+  background: radial-gradient(circle at 78% 16%, rgba(243, 111, 49, 0.2), transparent 26%), var(--green);
+  color: white;
+}
+
+.academy-terms-hero-grid {
+  display: grid;
+  align-items: end;
+  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
+  gap: clamp(50px, 9vw, 150px);
+}
+
+.academy-terms-kicker {
+  display: block;
+  margin-bottom: 24px;
+  color: var(--orange);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.academy-terms-hero h1 {
+  max-width: 850px;
+  margin: 0;
+  font-size: clamp(4.2rem, 8vw, 8.6rem);
+  line-height: 0.88;
+  letter-spacing: -0.075em;
+}
+
+.academy-terms-hero-grid > div > p {
+  max-width: 690px;
+  margin: 34px 0 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 1.04rem;
+  line-height: 1.7;
+}
+
+.academy-terms-hero-card {
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.academy-terms-hero-card small,
+.academy-terms-hero-card span { display: block; color: rgba(255, 255, 255, 0.65); }
+
+.academy-terms-hero-card strong {
+  display: block;
+  margin: 16px 0 4px;
+  color: var(--orange);
+  font-size: clamp(3.6rem, 6vw, 6.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.07em;
+}
+
+.academy-terms-hero-card p {
+  margin: 28px 0 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.academy-terms-index { border-bottom: 1px solid var(--line); background: white; }
+.academy-terms-index > div {
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  gap: 30px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.academy-terms-index > div::-webkit-scrollbar { display: none; }
+.academy-terms-index span,
+.academy-terms-index a { flex: 0 0 auto; font-size: 0.72rem; font-weight: 700; }
+.academy-terms-index span { color: var(--orange-dark); text-transform: uppercase; }
+.academy-terms-index a { color: var(--muted); }
+.academy-terms-index a:hover { color: var(--ink); }
+
+.academy-terms-reading-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.36fr) minmax(0, 1fr);
+  gap: clamp(50px, 9vw, 145px);
+}
+
+.academy-terms-section-label > span,
+.academy-terms-section-head > div > span { color: var(--orange-dark); font-size: 0.72rem; font-weight: 800; }
+.academy-terms-section-label h2,
+.academy-terms-section-head h2,
+.academy-registration-grid h2 {
+  margin: 14px 0 0;
+  font-size: clamp(2.8rem, 5vw, 5.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.065em;
+}
+.academy-terms-section-label > p { margin: 24px 0 0; color: var(--muted); font-size: 0.76rem; }
+.academy-terms-prose { max-width: 920px; }
+.academy-terms-prose > p { color: var(--muted); line-height: 1.75; }
+.academy-terms-prose .academy-terms-lead {
+  margin-top: 0;
+  color: var(--ink);
+  font-size: clamp(1.45rem, 2.3vw, 2.25rem);
+  line-height: 1.35;
+  letter-spacing: -0.035em;
+}
+
+.academy-terms-callout {
+  display: grid;
+  margin: 38px 0;
+  padding: 24px;
+  border-left: 4px solid var(--orange);
+  background: white;
+  grid-template-columns: 28px 1fr;
+  gap: 16px;
+}
+.academy-terms-callout svg { color: var(--orange-dark); }
+.academy-terms-callout p { margin: 0; line-height: 1.65; }
+.academy-terms-checklist {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+}
+.academy-terms-checklist li {
+  display: grid;
+  align-items: start;
+  padding: 22px;
+  background: white;
+  grid-template-columns: 20px 1fr;
+  gap: 12px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+.academy-terms-checklist svg { margin-top: 2px; color: var(--orange-dark); }
+
+.academy-fees-section { background: white; }
+.academy-terms-section-head {
+  display: grid;
+  align-items: end;
+  margin-bottom: 54px;
+  grid-template-columns: 1fr minmax(300px, 0.65fr);
+  gap: 70px;
+}
+.academy-terms-section-head > p { margin: 0; color: var(--muted); line-height: 1.7; }
+.academy-programme-fee-grid {
+  display: grid;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.academy-programme-fee-grid article {
+  min-height: 380px;
+  padding: 34px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.academy-programme-fee-grid article > span,
+.academy-programme-fee-grid article > small { display: block; color: var(--muted); font-size: 0.68rem; }
+.academy-programme-fee-grid h3 { margin: 42px 0 14px; font-size: 1.55rem; letter-spacing: -0.045em; }
+.academy-programme-fee-grid article > p {
+  min-height: 92px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+.academy-programme-price { margin-top: 34px; padding-top: 22px; border-top: 1px solid var(--line); }
+.academy-programme-price small,
+.academy-programme-price strong { display: block; }
+.academy-programme-price small { color: var(--muted); font-size: 0.65rem; }
+.academy-programme-price strong {
+  margin-top: 6px;
+  color: var(--orange-dark);
+  font-size: 1.9rem;
+  letter-spacing: -0.05em;
+}
+.academy-previous-rate,
+.academy-secondary-rate { margin-top: 12px; line-height: 1.5; }
+
+.academy-schedules-section { background: var(--green); color: white; }
+.academy-terms-section-head.is-light > p { color: rgba(255, 255, 255, 0.65); }
+.academy-schedule-note {
+  display: grid;
+  margin-bottom: 26px;
+  padding: 18px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  grid-template-columns: 25px 1fr;
+  gap: 12px;
+}
+.academy-schedule-note svg { color: var(--orange); }
+.academy-schedule-note p { margin: 0; color: rgba(255, 255, 255, 0.72); font-size: 0.78rem; line-height: 1.5; }
+.academy-schedule-list { border-top: 1px solid rgba(255, 255, 255, 0.18); }
+.academy-schedule-list > details { border-bottom: 1px solid rgba(255, 255, 255, 0.18); }
+.academy-schedule-list summary,
+.academy-terms-disclosure summary {
+  display: flex;
+  cursor: pointer;
+  list-style: none;
+  align-items: center;
+  justify-content: space-between;
+}
+.academy-schedule-list summary::-webkit-details-marker,
+.academy-terms-disclosure summary::-webkit-details-marker { display: none; }
+.academy-schedule-list summary { min-height: 76px; font-size: 0.9rem; font-weight: 750; }
+.academy-schedule-list details[open] summary svg,
+.academy-terms-disclosure[open] summary svg { transform: rotate(180deg); }
+.academy-schedule-list summary svg,
+.academy-terms-disclosure summary svg { transition: transform 180ms ease; }
+.academy-schedule-panel { padding: 0 0 32px; }
+.academy-schedule-panel > p { margin: 0 0 14px; color: var(--orange); font-size: 0.73rem; }
+.academy-schedule-table-wrap { overflow-x: auto; background: white; color: var(--ink); }
+.academy-schedule-table-wrap table { width: 100%; min-width: 920px; border-collapse: collapse; font-size: 0.76rem; }
+.academy-schedule-table-wrap th,
+.academy-schedule-table-wrap td {
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+}
+.academy-schedule-table-wrap thead th {
+  background: #ebe9e3;
+  color: var(--muted);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.academy-schedule-table-wrap tbody th { font-weight: 750; }
+
+.academy-conditions-section { background: white; }
+.academy-terms-disclosures { border-top: 1px solid var(--line); }
+.academy-terms-disclosure { border-bottom: 1px solid var(--line); scroll-margin-top: 100px; }
+.academy-terms-disclosure summary { min-height: 82px; font-size: 1rem; font-weight: 750; }
+.academy-terms-disclosure summary svg { color: var(--orange-dark); }
+.academy-terms-disclosure-body {
+  max-width: 840px;
+  padding: 0 40px 34px 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.75;
+}
+.academy-terms-disclosure-body ul { margin: 0; padding-left: 20px; }
+.academy-terms-disclosure-body li + li { margin-top: 12px; }
+.academy-terms-disclosure-body a { color: var(--orange-dark); text-decoration: underline; text-underline-offset: 3px; }
+
+.academy-registration-section { background: #e9e5dc; }
+.academy-registration-grid {
+  display: grid;
+  align-items: start;
+  grid-template-columns: minmax(0, 0.85fr) minmax(420px, 1.15fr);
+  gap: clamp(60px, 10vw, 170px);
+}
+.academy-registration-grid > div > p {
+  max-width: 620px;
+  margin: 28px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.academy-registration-actions { display: flex; align-items: center; margin-top: 34px; gap: 26px; }
+.academy-registration-grid aside { padding: 34px; background: white; }
+.academy-registration-grid aside > div { display: flex; align-items: center; gap: 13px; }
+.academy-registration-grid aside svg { color: var(--orange-dark); }
+.academy-registration-grid aside h3 { margin: 0; font-size: 1.1rem; }
+.academy-registration-grid aside ul { margin: 26px 0 0; padding: 0; list-style: none; }
+.academy-registration-grid aside li {
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+.membership-terms-link { display: inline-flex; margin-top: 28px; }
+
+@media (max-width: 1050px) {
+  .academy-terms-hero-grid,
+  .academy-terms-reading-grid,
+  .academy-registration-grid { grid-template-columns: 1fr; }
+  .academy-terms-hero-card { max-width: 480px; }
+  .academy-programme-fee-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .academy-registration-grid { gap: 50px; }
+}
+
+@media (max-width: 700px) {
+  .academy-terms-hero { padding: 68px 0; }
+  .academy-terms-hero h1 { font-size: clamp(3.5rem, 18vw, 5.4rem); }
+  .academy-terms-index > div { gap: 22px; }
+  .academy-terms-section-head { grid-template-columns: 1fr; gap: 22px; }
+  .academy-terms-checklist,
+  .academy-programme-fee-grid { grid-template-columns: 1fr; }
+  .academy-programme-fee-grid article { min-height: 0; }
+  .academy-programme-fee-grid article > p { min-height: 0; }
+  .academy-registration-actions { align-items: stretch; flex-direction: column; }
+  .academy-registration-actions .text-link { justify-content: center; }
+  .academy-registration-grid aside { padding: 26px; }
 }
