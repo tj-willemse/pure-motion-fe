@@ -375,15 +375,15 @@ export default function JuniorAcademyTermsPage() {
             <h2>Ready for the next step?</h2>
             <p>
               New juniors begin with a free assessment. Returning or recently assessed juniors can
-              create their customer account now; Junior Academy programme registration is completed
-              with the academy team.
+              complete the full Junior Academy registration form online. The academy team will then
+              confirm the programme, coach, schedule and payment details.
             </p>
             <div className="academy-registration-actions">
               <Link href="/book?service=junior-assessment" className="button">
                 Book a free assessment <ArrowRight size={18} aria-hidden="true" />
               </Link>
-              <Link href="/register" className="text-link">
-                Create an account <ArrowRight size={17} aria-hidden="true" />
+              <Link href="/juniors/academy-registration" className="text-link">
+                Complete JAM registration <ArrowRight size={17} aria-hidden="true" />
               </Link>
             </div>
           </div>

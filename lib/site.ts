@@ -68,6 +68,7 @@ export const navItems: readonly NavItem[] = [
       { label: "School Team Golf", href: "/juniors#school-team-golf", art: "users" },
       { label: "Calendar", href: "/juniors#calendar", art: "calendar" },
       { label: "Academy fees & terms", href: "/juniors/academy-terms", art: "check" },
+      { label: "Academy registration", href: "/juniors/academy-registration", art: "calendar" },
     ],
   },
   {
