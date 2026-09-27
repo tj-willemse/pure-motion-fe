@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { safeNext } from "@/lib/auth-next";
+import { authErrorMessage } from "@/lib/auth-error-message";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Enter a valid email address."),
@@ -24,11 +25,6 @@ const registrationSchema = z
       .regex(/[A-Z]/, "Add an uppercase letter to your password.")
       .regex(/\d/, "Add a number to your password.")
       .regex(/[^A-Za-z0-9]/, "Add a symbol to your password."),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Your passwords do not match.",
-    path: ["confirmPassword"],
   });
 
 function portalRedirect(type: "error" | "message", message: string, path = "/login", next = "/dashboard"): never {
@@ -52,15 +48,7 @@ export async function signIn(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(result.data);
 
-  if (error?.code === "email_not_confirmed" || error?.message.toLowerCase().includes("email not confirmed")) {
-    portalRedirect(
-      "error",
-      "Please verify your email before signing in. Check your inbox for the confirmation link.",
-      "/login", next,
-    );
-  }
-
-  if (error) portalRedirect("error", "The email address or password is incorrect.", "/login", next);
+  if (error) portalRedirect("error", authErrorMessage(error, "signin"), "/login", next);
 
   revalidatePath("/", "layout");
   redirect(next);
@@ -73,7 +61,6 @@ export async function register(formData: FormData) {
     lastName: formText(formData, "lastName"),
     email: formText(formData, "email"),
     password: formText(formData, "password"),
-    confirmPassword: formText(formData, "confirmPassword"),
   });
 
   if (!result.success) {
@@ -96,9 +83,10 @@ export async function register(formData: FormData) {
   });
 
   if (error) {
+    console.error("Account signup failed", { code: error.code, status: error.status });
     portalRedirect(
       "error",
-      "We could not create your account. Check your details or sign in if you already registered.",
+      authErrorMessage(error, "signup"),
       "/register", next,
     );
   }
@@ -116,4 +104,31 @@ export async function signOut() {
   await supabase.auth.signOut();
   revalidatePath("/", "layout");
   portalRedirect("message", "You have signed out.");
+}
+
+export async function requestPasswordReset(formData: FormData) {
+  const next = safeNext(formText(formData, "next"));
+  const email = z.string().trim().email().safeParse(formText(formData, "email"));
+  if (!email.success) portalRedirect("error", "Enter a valid email address.", "/forgot-password", next);
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email.data, {
+    redirectTo: `${origin}/auth/recovery?next=${encodeURIComponent(next)}`,
+  });
+  if (error) portalRedirect("error", authErrorMessage(error, "recovery"), "/forgot-password", next);
+  portalRedirect("message", "If an account exists for that email, you’ll receive a password reset link. Open it in this browser and check your spam folder too.", "/forgot-password", next);
+}
+
+export async function resetPassword(formData: FormData) {
+  const next = safeNext(formText(formData, "next"));
+  const password = registrationSchema.shape.password.safeParse(formText(formData, "password"));
+  if (!password.success) portalRedirect("error", password.error.issues[0].message, "/reset-password", next);
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+  if (!data.user) portalRedirect("error", "Your reset session has expired. Request a new link.", "/forgot-password", next);
+  const { error } = await supabase.auth.updateUser({ password: password.data });
+  if (error) portalRedirect("error", authErrorMessage(error, "password"), "/reset-password", next);
+  await supabase.auth.signOut();
+  revalidatePath("/", "layout");
+  portalRedirect("message", "Password updated. Sign in with your new password.", "/login", next);
 }

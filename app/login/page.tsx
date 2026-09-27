@@ -71,6 +71,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 autoComplete="current-password"
                 minLength={8}
               />
+              <div className="auth-forgot-link"><Link href={`/forgot-password?next=${encodeURIComponent(next)}`}>Forgot password?</Link></div>
               <PendingSubmitButton pendingLabel="Signing in…" disabled={!configured}>
                 Sign in <ArrowRight size={18} />
               </PendingSubmitButton>

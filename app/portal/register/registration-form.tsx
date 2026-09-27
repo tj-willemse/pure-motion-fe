@@ -17,7 +17,6 @@ const strengthLabels = ["Very weak", "Weak", "Fair", "Good", "Strong"];
 export function RegistrationForm({ configured, next = "/dashboard" }: { configured: boolean; next?: string }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const strength = passwordChecks.filter((check) => check(password)).length;
 
   return (
@@ -79,30 +78,6 @@ export function RegistrationForm({ configured, next = "/dashboard" }: { configur
           <p id="password-requirements">
             Use 10 or more characters with uppercase and lowercase letters, a number and a symbol.
           </p>
-        </div>
-      )}
-      {password && (
-        <div className="confirm-password-reveal">
-          <label htmlFor="confirmPassword">Confirm password</label>
-          <div className="password-field">
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type={showConfirmation ? "text" : "password"}
-              autoComplete="new-password"
-              minLength={10}
-              required
-            />
-            <button
-              className="password-toggle"
-              type="button"
-              onClick={() => setShowConfirmation((visible) => !visible)}
-              aria-label={showConfirmation ? "Hide confirmation password" : "Show confirmation password"}
-              aria-pressed={showConfirmation}
-            >
-              {showConfirmation ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
         </div>
       )}
       <PendingSubmitButton pendingLabel="Creating account…" disabled={!configured}>

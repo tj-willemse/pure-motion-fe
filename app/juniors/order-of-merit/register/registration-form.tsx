@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Check, CircleCheck, Info, ShieldCheck, Upload } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Info, ShieldCheck, Upload } from "lucide-react";
 import { useMemo, useState, useTransition } from "react";
 import type { CustomerAccount } from "@/lib/customer-account-types";
 import { submitOomRegistration, type OomSubmissionResult } from "./actions";
@@ -184,6 +184,10 @@ export function OomRegistrationForm({ account, today }: { account: CustomerAccou
         setSubmissionError(result.error ?? "The registration could not be submitted.");
         return;
       }
+      if (result.checkoutUrl) {
+        window.location.assign(result.checkoutUrl);
+        return;
+      }
       setSubmission(result);
     });
   }
@@ -202,9 +206,9 @@ export function OomRegistrationForm({ account, today }: { account: CustomerAccou
   if (submission?.ok) {
     return (
       <div className="oom-registration-success">
-        <CircleCheck size={42} aria-hidden="true" />
-        <h2>Registration received.</h2>
-        <p>Your entry is saved. Continue to the secure payment page to complete checkout. Keep your reference and payment link; do not submit the same entry again.</p>
+        <Info size={42} aria-hidden="true" />
+        <h2>Payment still required.</h2>
+        <p>Your entry is awaiting payment, not confirmed. Retry checkout below. Your details are saved; do not submit the same entry again.</p>
         <dl>
           <div><dt>Reference</dt><dd>{submission.reference}</dd></div>
           <div><dt>Player</dt><dd>{details.playerKnownAs || details.playerFirstName} {details.playerSurname}</dd></div>
@@ -215,7 +219,6 @@ export function OomRegistrationForm({ account, today }: { account: CustomerAccou
         {!!submission.warnings?.length && <div className="oom-form-notice is-warning"><Info size={19} /><div><strong>Registration saved with a follow-up needed.</strong>{submission.warnings.map((warning) => <p key={warning}>{warning}</p>)}</div></div>}
         <div className="oom-register-actions">
           {submission.paymentUrl ? <Link className="button" href={submission.paymentUrl}>Continue to payment <ArrowRight size={18} /></Link> : <p>Online checkout is not configured yet. Your entry is saved; contact the academy with your reference.</p>}
-          <button className="button button-outline" type="button" onClick={() => { setSubmission(null); setStep(0); }}>Register another player</button>
           <Link className="button" href="/juniors/order-of-merit">Back to Order of Merit <ArrowRight size={18} /></Link>
         </div>
       </div>
@@ -364,7 +367,7 @@ export function OomRegistrationForm({ account, today }: { account: CustomerAccou
               </div>
               <label className="oom-checkbox-row"><input type="checkbox" checked={privacyConsent} onChange={(event) => setPrivacyConsent(event.target.checked)} /><span>I consent to Pure Motion contacting me about this registration and acknowledge that photographs and videos may be taken at events for promotional purposes, subject to the <Link href="https://puremotiongolf.com/privacy-policy/" target="_blank">Privacy Policy</Link>.</span></label>
               <label className="oom-checkbox-row"><input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} /><span>I have read and accept the <Link href="#competition-terms">Order of Merit terms</Link>, payment and cancellation conditions, competition rules, risk acknowledgement, waiver and indemnity.</span></label>
-              <div className="oom-form-notice"><ShieldCheck size={19} /><div><strong>Secure payment after registration.</strong><p>Your entry is saved first, with places held for 12 hours. Continue to Yoco checkout on the payment page. Live entries are confirmed only after payment is verified; test payments do not confirm places.</p></div></div>
+              <div className="oom-form-notice"><ShieldCheck size={19} /><div><strong>Continue to secure payment.</strong><p>You’ll be taken to Yoco checkout next. Your details are saved as awaiting payment, with places held for 12 hours. Registration is confirmed only after live payment is verified; test payments do not confirm places.</p></div></div>
               {submissionError && <div className="oom-form-notice is-error" role="alert"><Info size={19} /><div><strong>Registration not submitted.</strong><p>{submissionError}</p></div></div>}
               <FormActions back={() => setStep(2)} next={submitRegistration} nextLabel={isSubmitting ? "Saving registration…" : "Continue to payment"} nextDisabled={!privacyConsent || !accepted || isSubmitting} />
             </fieldset>

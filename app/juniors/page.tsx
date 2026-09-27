@@ -120,8 +120,6 @@ export default function JuniorsPage() {
               Junior golf for ages 4 to 18, from a first assessment and weekly coaching to
               confident course play and competition.
             </p>
-            <div className="junior-age-badge"><strong>4 to 18</strong><span>years old</span></div>
-            <p>Atlantic Beach Academy by Pure Motion opens in October 2026. Junior programme details will be confirmed.</p>
             <div className="juniors-hero-actions">
               <Link href="/book?service=junior-assessment" className="button button-small">
                 Book a free assessment <ArrowRight size={19} aria-hidden="true" />

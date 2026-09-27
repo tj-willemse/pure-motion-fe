@@ -28,5 +28,7 @@ export async function POST(request: Request) {
   const { data, error } = await admin.rpc("apply_oom_yoco_event", { event: parsed.data });
   if (error) return new Response("Payment reconciliation failed", { status: 500 });
   revalidatePath("/dashboard/order-of-merit");
+  revalidatePath("/dashboard/payments");
+  revalidatePath("/dashboard");
   return Response.json({ received: true, result: data });
 }

@@ -4,11 +4,9 @@ import { revalidatePath } from "next/cache";
 import sharp from "sharp";
 import { z } from "zod";
 import { oomRounds, oomSeason } from "@/lib/order-of-merit";
-import { sendRegistrationReceivedEmails } from "@/lib/registration-email";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { paymentPath } from "@/lib/yoco";
-import { siteUrl } from "@/lib/site";
+import { createYocoCheckout, paymentPath } from "@/lib/yoco";
 
 const required = z.string().trim().min(1);
 const registrationSchema = z.object({
@@ -64,6 +62,7 @@ export type OomSubmissionResult = {
   totalCents?: number;
   paymentDeadline?: string;
   paymentUrl?: string;
+  checkoutUrl?: string;
   warnings?: string[];
 };
 
@@ -184,18 +183,13 @@ export async function submitOomRegistration(formData: FormData): Promise<OomSubm
   }
 
   const paymentUrl = paymentPath(result.id);
-  const email = await sendRegistrationReceivedEmails({
-    reference: result.reference,
-    parentName: `${parsed.data.parent_first_name} ${parsed.data.parent_last_name}`,
-    parentEmail: parsed.data.parent_email,
-    playerName: `${parsed.data.player_known_as || parsed.data.player_first_name} ${parsed.data.player_last_name}`,
-    division: parsed.data.division === "standard" ? "Standard / Stableford" : "Kickstarter",
-    roundDates: selectedRounds.map((round) => new Intl.DateTimeFormat("en-ZA", { dateStyle: "full" }).format(new Date(`${round.date}T12:00:00+02:00`))),
-    totalCents: result.total_cents,
-    paymentUrl: paymentUrl ? new URL(paymentUrl, siteUrl).toString() : undefined,
-  }).catch(() => ({ customer: { sent: false }, team: { sent: false } }));
-  if (!email.customer.sent || !email.team.sent) {
-    warnings.push("The registration was saved, but one or more automatic emails could not be sent. Staff can still see it in the dashboard.");
+  let checkoutUrl: string | undefined;
+  if (paymentUrl) {
+    try {
+      checkoutUrl = await createYocoCheckout(paymentUrl.split("/").pop()!);
+    } catch {
+      warnings.push("Checkout could not be opened. Your entry is awaiting payment; retry using the payment link below without submitting another entry.");
+    }
   }
 
   revalidatePath("/dashboard/order-of-merit");
@@ -205,6 +199,7 @@ export async function submitOomRegistration(formData: FormData): Promise<OomSubm
     totalCents: result.total_cents,
     paymentDeadline: result.payment_deadline,
     paymentUrl: paymentUrl ?? undefined,
+    checkoutUrl,
     warnings,
   };
 }

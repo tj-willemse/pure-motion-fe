@@ -21,7 +21,6 @@ import {
   Target,
   Trophy,
   UserPlus,
-  UserRound,
   UsersRound,
   X,
   type LucideIcon,
@@ -29,6 +28,7 @@ import {
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { navItems } from "@/lib/site";
+import { AccountMenu } from "@/components/account-menu";
 
 const menuIcons: Record<string, LucideIcon> = {
   badge: BadgeCheck,
@@ -320,9 +320,7 @@ export function SiteHeader() {
           <Link href="/book" className="button button-small">
             Book a lesson
           </Link>
-          <Link href="/login" className="portal-link" aria-label="Sign in to your profile">
-            <UserRound size={18} aria-hidden="true" />
-          </Link>
+          <AccountMenu />
           <button
             className="menu-button"
             type="button"

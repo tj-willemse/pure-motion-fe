@@ -10,7 +10,9 @@ export function SiteChrome({ position }: { position: "header" | "footer" }) {
   if (
     pathname.startsWith("/dashboard") ||
     pathname === "/login" ||
-    pathname === "/register"
+    pathname === "/register" ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password"
   ) return null;
 
   return position === "header" ? <SiteHeader /> : <SiteFooter />;
