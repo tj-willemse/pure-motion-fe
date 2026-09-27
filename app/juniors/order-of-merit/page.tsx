@@ -9,6 +9,7 @@ import {
   CircleCheck,
   Clock,
   CreditCard,
+  LockKeyhole,
   Flag,
   MapPin,
   ShieldCheck,
@@ -264,11 +265,20 @@ export default async function OrderOfMeritPage() {
       </section>
       <section className="section oom-register-section">
         <div className="site-shell">
-          {account ? <OomRegistrationForm account={account} today={new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Johannesburg", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date())} /> : <div className="oom-registration-card">
-            <h3>Sign in to register your junior.</h3>
-            <p>Your entry and payment will be saved to your account. Children do not need their own login.</p>
-            <Link className="button" href="/login?next=%2Fjuniors%2Forder-of-merit%23registration">Sign in or create an account <ArrowRight size={18} /></Link>
-          </div>}
+          <div className={account ? undefined : "oom-registration-locked"}>
+            <div inert={!account} aria-hidden={!account} className={account ? undefined : "oom-registration-preview"}>
+              <OomRegistrationForm account={account ?? { firstName: "", lastName: "", email: "", phone: "", family: [] }} today={new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Johannesburg", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date())} />
+            </div>
+            {!account && <section className="oom-registration-unlock" aria-labelledby="registration-unlock-title">
+              <LockKeyhole size={28} aria-hidden="true" />
+              <h3 id="registration-unlock-title">Sign in to register your junior.</h3>
+              <p>Your registration and payment will be saved to your account. Children do not need their own login.</p>
+              <div className="oom-registration-unlock-actions">
+                <Link className="button" href="/login?next=%2Fjuniors%2Forder-of-merit%23registration">Sign in <ArrowRight size={18} /></Link>
+                <Link className="button button-outline" href="/register?next=%2Fjuniors%2Forder-of-merit%23registration">Create an account</Link>
+              </div>
+            </section>}
+          </div>
         </div>
       </section>
     </main>

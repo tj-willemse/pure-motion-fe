@@ -8820,6 +8820,14 @@ div[id] {
 .oom-field textarea,
 .oom-admin-table input,
 .oom-admin-table select { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid #d8d4cc; border-radius: 0; background: #fbfaf7; color: var(--ink); font: inherit; font-size: 0.76rem; }
+.oom-registration-locked { position: relative; isolation: isolate; }
+.oom-registration-preview { opacity: 0.45; pointer-events: none; user-select: none; }
+.oom-registration-unlock { position: absolute; z-index: 1; top: 140px; left: 50%; transform: translateX(-50%); width: min(560px, calc(100% - 32px)); padding: clamp(24px, 4vw, 44px); border: 1px solid var(--line); background: #fff; box-shadow: 0 16px 60px rgba(0, 0, 0, 0.14); }
+.oom-registration-unlock > svg { color: var(--orange-dark); margin-bottom: 18px; }
+.oom-registration-unlock h3 { margin: 0 0 14px; font-size: clamp(22px, 2vw, 30px); }
+.oom-registration-unlock p { color: var(--muted); line-height: 1.65; }
+.oom-registration-unlock-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+@media (max-width: 600px) { .oom-registration-unlock { top: 110px; } .oom-registration-unlock-actions .button { width: 100%; justify-content: center; } }
 .oom-field textarea { resize: vertical; }
 .oom-field select {
   appearance: none;
