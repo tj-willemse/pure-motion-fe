@@ -12,6 +12,7 @@ export const dashboardNavigation: Record<DashboardRole, DashboardNavItem[]> = {
     { label: "Overview", href: "/dashboard" },
     { label: "Bookings", href: "/dashboard/bookings" },
     { label: "Family", href: "/dashboard/family" },
+    { label: "Order of Merit", href: "/dashboard/order-of-merit" },
     commonProfile,
   ],
   coach: [
@@ -19,6 +20,7 @@ export const dashboardNavigation: Record<DashboardRole, DashboardNavItem[]> = {
     { label: "Schedule", href: "/dashboard/schedule" },
     { label: "Availability", href: "/dashboard/availability" },
     { label: "Clients", href: "/dashboard/clients" },
+    { label: "Order of Merit", href: "/dashboard/order-of-merit" },
     commonProfile,
   ],
   receptionist: [
@@ -26,6 +28,7 @@ export const dashboardNavigation: Record<DashboardRole, DashboardNavItem[]> = {
     { label: "Bookings", href: "/dashboard/bookings" },
     { label: "People", href: "/dashboard/people" },
     { label: "Services", href: "/dashboard/services" },
+    { label: "Order of Merit", href: "/dashboard/order-of-merit" },
     commonProfile,
   ],
   admin: [
@@ -33,6 +36,7 @@ export const dashboardNavigation: Record<DashboardRole, DashboardNavItem[]> = {
     { label: "Bookings", href: "/dashboard/bookings" },
     { label: "People", href: "/dashboard/people" },
     { label: "Services", href: "/dashboard/services" },
+    { label: "Order of Merit", href: "/dashboard/order-of-merit" },
     { label: "Audit log", href: "/dashboard/audit" },
     commonProfile,
   ],

@@ -131,6 +131,7 @@ export function AcademyRegistrationForm() {
 
             <fieldset data-step="2" className={step === 2 ? "academy-form-panel active" : "academy-form-panel"}>
               <legend>Location and membership fee</legend>
+              <p>Atlantic Beach Academy by Pure Motion opens in October 2026. Registration for this venue is not yet available; programme details will be confirmed.</p>
               <RadioGroup label="Where will your child take lessons?" name="location" options={[["durbanville", "Durbanville Golf Club"], ["hazendal", "Hazendal Golf, Stellenbosch"], ["either", "Either location is suitable"]]} required={step === 2} />
               <Field label="When will they be joining?" required hint="The annual R335 membership fee is charged pro-rata after January.">
                 <select name="joining_month" value={joiningMonth} onChange={(event) => setJoiningMonth(event.target.value)} required={step === 2}>

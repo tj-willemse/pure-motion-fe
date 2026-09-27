@@ -6,11 +6,7 @@ import {
   CalendarDays,
   Check,
   CircleCheck,
-  FileText,
-  Flag,
   GraduationCap,
-  ShieldCheck,
-  Target,
   Trophy,
   UsersRound,
 } from "lucide-react";
@@ -48,10 +44,7 @@ const juniorSections = [
   { label: "Free assessment", href: "#assessment", icon: CircleCheck },
   { label: "Junior Academy", href: "#academy", icon: GraduationCap },
   { label: "Order of Merit", href: "#order-of-merit", icon: Trophy },
-  { label: "Holiday programmes", href: "#holiday-programmes", icon: CalendarDays },
-  { label: "School Team Golf", href: "#school-team-golf", icon: UsersRound },
-  { label: "Calendar", href: "#calendar", icon: CalendarDays },
-  { label: "Fees & terms", href: "/juniors/academy-terms", icon: FileText },
+  { label: "Holidays & school teams", href: "#more-programmes", icon: CalendarDays },
 ];
 
 const programmes = [
@@ -87,29 +80,6 @@ const programmes = [
     price: "R1667 per month",
     copy: "Technique, practice, mental skills, course management, preparation, fitness and advanced rules.",
   },
-];
-
-const meritPoints = [
-  ["1st", "60"],
-  ["2nd", "52"],
-  ["3rd", "45"],
-  ["4th", "38"],
-  ["5th", "30"],
-  ["6th", "25"],
-  ["7th", "20"],
-  ["8th", "15"],
-  ["9th and after", "10"],
-];
-
-const termFourDates = [
-  "13 Oct",
-  "20 Oct",
-  "27 Oct",
-  "3 Nov",
-  "10 Nov",
-  "17 Nov",
-  "24 Nov",
-  "1 Dec",
 ];
 
 export default function JuniorsPage() {
@@ -151,6 +121,7 @@ export default function JuniorsPage() {
               confident course play and competition.
             </p>
             <div className="junior-age-badge"><strong>4 to 18</strong><span>years old</span></div>
+            <p>Atlantic Beach Academy by Pure Motion opens in October 2026. Junior programme details will be confirmed.</p>
             <div className="juniors-hero-actions">
               <Link href="/book?service=junior-assessment" className="button button-small">
                 Book a free assessment <ArrowRight size={19} aria-hidden="true" />
@@ -281,115 +252,24 @@ export default function JuniorsPage() {
       </section>
 
       <section className="section merit-section" id="order-of-merit">
-        <div className="site-shell">
-          <div className="merit-hero">
-            <div className="merit-title">
-              <h2>Order of Merit.</h2>
-            </div>
-            <div className="merit-intro">
-              <p>
-                Learn to compete without losing the love of the game. A nine hole Tuesday competition
-                at Durbanville Golf Club for course ready juniors.
-                Players build confidence, learn competition routines and collect points across the year.
-              </p>
-              <a href="#merit-results" className="button button-light">
-                Understand the scoring <ArrowRight size={18} />
-              </a>
-            </div>
+        <div className="site-shell junior-oom-teaser">
+          <div>
+            <Trophy size={30} strokeWidth={1.5} aria-hidden="true" />
+            <h2>Order of Merit.</h2>
           </div>
-
-          <div className="merit-facts-grid">
-            <div><small>Eligibility</small><strong>Ages 6 to 18</strong><span>Course ready juniors</span></div>
-            <div><small>Schedule</small><strong>Tuesdays</strong><span>During public school terms</span></div>
-            <div><small>Check in</small><strong>3:00 pm</strong><span>Tee times from 3:20 pm</span></div>
-            <div><small>2026 season</small><strong>31 rounds</strong><span>Minimum 12 for prizes</span></div>
-          </div>
-
-          <div className="merit-registration-row">
-            <div>
-              <strong>Registration opens Wednesday and closes Saturday before each Tuesday round.</strong>
-              <p>No club membership or official handicap is required. A paid entry secures the tee time.</p>
-            </div>
-            <div className="merit-fees">
-              <span><small>JAM member</small><strong>R35</strong><em>per round</em></span>
-              <span><small>Non member</small><strong>R80</strong><em>per round</em></span>
-              <p>Book a full term or year and receive 10 percent off.</p>
-            </div>
-          </div>
-
-          <div className="merit-course-grid">
-            <article>
-              <div className="merit-course-icon"><Flag size={24} /></div>
-              <span>Standard course</span>
-              <h3>Stableford competition</h3>
-              <p>
-                Nine holes on alternating front and back nines. Players use their official handicap,
-                or begin with an allocated Handicap Index of 36.0.
-              </p>
-              <ul>
-                <li>Boys 13 and older play blue tees</li>
-                <li>Boys 12 and younger play red tees</li>
-                <li>Girls play red tees</li>
-                <li>Record fairways, greens and putts</li>
-              </ul>
-            </article>
-            <article>
-              <div className="merit-course-icon"><Target size={24} /></div>
-              <span>Kickstarter course</span>
-              <h3>A shorter route into competition</h3>
-              <p>
-                Nine adapted holes for newer course players. No official handicap is needed and
-                players can graduate into the Standard division as confidence improves.
-              </p>
-              <ul>
-                <li>Gross score format</li>
-                <li>Maximum score of 7 on each hole</li>
-                <li>Putts recorded on every hole</li>
-                <li>Adults may help younger players score</li>
-              </ul>
-            </article>
-          </div>
-
-          <div className="merit-results-grid" id="merit-results">
-            <div className="merit-points-panel">
-              <span>Standard division points</span>
-              <h3>Every round contributes.</h3>
-              <div className="merit-points-table">
-                {meritPoints.map(([place, points]) => (
-                  <div key={place}><span>{place}</span><strong>{points} pts</strong></div>
-                ))}
-              </div>
-            </div>
-            <div className="merit-results-copy">
-              <span>Results and prizes</span>
-              <h3>Weekly results feed the annual leaderboard.</h3>
-              <p>
-                Stableford players earn points for every round and their finishing position.
-                Kickstarter standings use the average gross score from all rounds played.
-              </p>
-              <ul>
-                <li><CircleCheck size={17} /> Results update on Wednesday after each round</li>
-                <li><CircleCheck size={17} /> At least 12 rounds are required for annual prizes</li>
-                <li><CircleCheck size={17} /> Six front nine and six back nine rounds are required</li>
-                <li><CircleCheck size={17} /> Prizes include leaders, statistics, putting, improvement and sportsmanship</li>
-                <li><CircleCheck size={17} /> A player may win one annual prize</li>
-              </ul>
-              <div className="merit-results-links">
-                <span>Annual leaderboard</span>
-                <span>Weekly Standard results</span>
-                <span>Weekly Kickstarter results</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="course-ready-panel">
-            <div><ShieldCheck size={28} /><h3>What course ready means</h3></div>
+          <div>
             <p>
-              The player can make contact with the ball, use basic chipping skills, take no more
-              than four putts, follow tee and green etiquette, stand safely, keep pace and
-              understand the warning fore. Ask a coach for an assessment if unsure.
+              A nine-hole Tuesday competition for course-ready juniors aged 6 to 18, with
+              Standard and Kickstarter divisions, weekly results and an annual leaderboard.
             </p>
-            <small>Players aged 6 to 10 must be accompanied by an adult.</small>
+            <dl>
+              <div><dt>2026 season</dt><dd>31 playable rounds</dd></div>
+              <div><dt>Entry</dt><dd>R35 JAM · R80 standard</dd></div>
+              <div><dt>Venue</dt><dd>Durbanville Golf Club</dd></div>
+            </dl>
+            <Link href="/juniors/order-of-merit" className="button button-light">
+              Explore Order of Merit <ArrowRight size={18} />
+            </Link>
           </div>
         </div>
       </section>
@@ -431,20 +311,6 @@ export default function JuniorsPage() {
                 <div><dt>Registration</dt><dd>R85 annually</dd></div>
               </dl>
             </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="junior-calendar-section" id="calendar">
-        <div className="site-shell junior-calendar-grid">
-          <div>
-            <h2>Order of Merit, term four.</h2>
-            <p>Dates can change. Confirmed event availability will be managed through the live calendar.</p>
-          </div>
-          <div className="junior-date-list">
-            {termFourDates.map((date, index) => (
-              <div key={date}><span>{String(index + 1).padStart(2, "0")}</span><strong>{date}</strong><small>Tuesday</small></div>
-            ))}
           </div>
         </div>
       </section>

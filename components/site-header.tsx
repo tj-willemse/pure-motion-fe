@@ -125,6 +125,15 @@ export function SiteHeader() {
         link.classList.toggle("section-link-active", index === activeIndex);
         link.classList.toggle("section-link-future", index > activeIndex || activeIndex === -1);
 
+        const orangeEdge = link.clientWidth * progress;
+        Array.from(link.children).forEach((child) => {
+          const element = child as HTMLElement;
+          const linkRect = link.getBoundingClientRect();
+          const elementRect = element.getBoundingClientRect();
+          const touchPoint = elementRect.left - linkRect.left + Math.min(3, elementRect.width * 0.15);
+          element.classList.toggle("section-progress-covered", orangeEdge >= touchPoint);
+        });
+
         if (index === activeIndex) {
           link.setAttribute("aria-current", "location");
         } else {

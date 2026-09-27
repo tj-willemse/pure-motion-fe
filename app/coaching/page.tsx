@@ -99,7 +99,7 @@ export default function CoachingPage() {
             <p>
               Choose the support that suits your game, your goals and the time you have
               available. Coaches are available across Durbanville and Hazendal seven days a
-              week.
+              week. Atlantic Beach Academy by Pure Motion opens in October 2026.
             </p>
             <div className="coaching-hero-note">
               <span>From</span>

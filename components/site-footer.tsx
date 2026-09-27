@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Facebook, Instagram, MessageCircle, Phone } from "lucide-react";
-import { navItems } from "@/lib/site";
+import { navItems, site } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -35,6 +35,9 @@ export function SiteFooter() {
           <div className="footer-links">
             <Link href="/#locations">Durbanville Golf Club<br /><span>Sport Way, Durbanville</span></Link>
             <Link href="/#locations">Hazendal Golf<br /><span>Bottelary Road, Stellenbosch</span></Link>
+            {site.locations.filter((location) => !location.bookable).map((location) => (
+              <Link href="/#locations" key={location.id}>{location.name}<br /><span>{location.status}</span></Link>
+            ))}
           </div>
         </div>
         <div>
@@ -54,6 +57,7 @@ export function SiteFooter() {
           <div className="footer-hours">
             <p><strong>Durbanville</strong><span>Mon to Fri, 7:00 to 17:30</span><span>Weekends, 7:00 to 16:00</span></p>
             <p><strong>Hazendal</strong><span>Mon to Fri, 7:00 to 17:00</span><span>Sat 7:00 to 16:00, Sun 8:00 to 14:00</span></p>
+            <p><strong>Atlantic Beach</strong><span>Opening October 2026</span><span>Hours to be confirmed</span></p>
           </div>
         </div>
       </div>

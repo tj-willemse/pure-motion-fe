@@ -118,7 +118,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="hero-proof" aria-label="Academy highlights">
-            <div><strong>2</strong><span>Cape Town locations</span></div>
+            <div><strong>3</strong><span>Locations · Atlantic Beach opens October</span></div>
             <div><strong>8</strong><span>Dedicated coaches</span></div>
             <div><strong>2014</strong><span>Established in Cape Town</span></div>
           </div>
@@ -204,7 +204,8 @@ export default function HomePage() {
             <h2 id="why-title">Why choose<br />Pure Motion.</h2>
             <p>
               Led by founder Lana Orgovanyi, Pure Motion combines 30 years of international
-              playing and coaching experience with a dedicated team across Durbanville and Hazendal.
+              playing and coaching experience with a dedicated team across Durbanville and Hazendal,
+              with Atlantic Beach Academy by Pure Motion opening in October 2026.
             </p>
             <Link href="/coaches" className="text-link why-link">
               Meet the coaching team <ArrowRight size={17} aria-hidden="true" />
@@ -216,7 +217,7 @@ export default function HomePage() {
               "Eight dedicated coaches",
               "Junior and adult programmes",
               "Swing and putting analysis technology",
-              "Two Cape Town locations",
+              "Atlantic Beach opening October 2026",
               "Coaching available seven days a week",
             ].map((item) => (
               <li key={item}><Check size={19} strokeWidth={2} aria-hidden="true" />{item}</li>
@@ -265,15 +266,15 @@ export default function HomePage() {
       <section className="section locations-section" id="locations">
         <div className="site-shell locations-grid">
           <div className="location-intro">
-            <h2>Two locations.<br />One standard.</h2>
-            <p>Choose the academy that works for you. Your coach and live availability will follow.</p>
+            <h2>Our locations.</h2>
+            <p>Visit us at Durbanville or Hazendal. Atlantic Beach Academy by Pure Motion opens in October 2026.</p>
           </div>
           <div className="location-list">
             {site.locations.map((location, index) => (
-              <Link href={`/book?location=${location.shortName.toLowerCase()}`} key={location.name}>
+              <Link href={location.bookable ? `/book?location=${location.id}` : "/events#contact"} key={location.name}>
                 <span className="location-index">0{index + 1}</span>
                 <span className="location-pin"><MapPin size={22} /></span>
-                <span><strong>{location.name}</strong><small>{location.region}</small></span>
+                <span><strong>{location.name}</strong><small>{location.status || location.region}</small></span>
                 <ArrowRight className="location-arrow" size={22} />
               </Link>
             ))}

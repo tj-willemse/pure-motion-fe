@@ -100,6 +100,7 @@ export default function CoachesPage() {
               <span><MapPin size={18} aria-hidden="true" /> Durbanville and Hazendal</span>
               <span><UsersRound size={18} aria-hidden="true" /> Academy leadership</span>
             </div>
+            <p>Atlantic Beach Academy by Pure Motion opens in October 2026. Coaching appointments for the new venue will be announced.</p>
             <p className="capacity-note">
               Lana is currently at capacity and is not accepting new clients.
             </p>

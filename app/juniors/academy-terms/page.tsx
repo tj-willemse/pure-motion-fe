@@ -4,16 +4,19 @@ import {
   ArrowRight,
   CalendarDays,
   Check,
-  ChevronDown,
   CircleAlert,
+  ClipboardCheck,
+  FileText,
   ShieldCheck,
+  WalletCards,
 } from "lucide-react";
 import {
   academyRates,
-  academySchedules,
   registrationChecklist,
 } from "@/lib/junior-academy-terms";
 import { siteUrl } from "@/lib/site";
+import { ScheduleAccordion } from "./schedule-accordion";
+import { TermsAccordion, TermsItem } from "./terms-accordion";
 
 export const metadata: Metadata = {
   title: "Junior Academy Fees, Schedules and Terms",
@@ -79,28 +82,6 @@ const programmes = [
   },
 ] as const;
 
-function TermsBlock({
-  id,
-  title,
-  children,
-  open = false,
-}: {
-  id: string;
-  title: string;
-  children: React.ReactNode;
-  open?: boolean;
-}) {
-  return (
-    <details className="academy-terms-disclosure" id={id} open={open}>
-      <summary>
-        <span>{title}</span>
-        <ChevronDown size={19} aria-hidden="true" />
-      </summary>
-      <div className="academy-terms-disclosure-body">{children}</div>
-    </details>
-  );
-}
-
 export default function JuniorAcademyTermsPage() {
   const structuredData = {
     "@context": "https://schema.org",
@@ -125,7 +106,6 @@ export default function JuniorAcademyTermsPage() {
       <section className="academy-terms-hero">
         <div className="site-shell academy-terms-hero-grid">
           <div>
-            <span className="academy-terms-kicker">Junior Academy · 2026</span>
             <h1>Fees, schedules<br />and terms.</h1>
             <p>
               Membership requirements, programme rates, monthly lesson schedules and the
@@ -141,16 +121,15 @@ export default function JuniorAcademyTermsPage() {
         </div>
       </section>
 
-      <nav className="academy-terms-index" aria-label="On this page">
-        <div className="site-shell">
-          <span>On this page</span>
-          <a href="#membership">Membership</a>
-          <a href="#programme-fees">Programme fees</a>
-          <a href="#monthly-schedules">Monthly schedules</a>
-          <a href="#academy-conditions">Terms and conditions</a>
-          <a href="#academy-registration">Registration</a>
-        </div>
-      </nav>
+      <div className="section-nav-sticky academy-terms-sticky-nav">
+        <nav className="academy-terms-index" aria-label="Junior Academy page sections">
+          <a href="#membership"><ShieldCheck size={20} strokeWidth={1.7} aria-hidden="true" /><strong>Membership</strong></a>
+          <a href="#programme-fees"><WalletCards size={20} strokeWidth={1.7} aria-hidden="true" /><strong>Programme fees</strong></a>
+          <a href="#monthly-schedules"><CalendarDays size={20} strokeWidth={1.7} aria-hidden="true" /><strong>Monthly schedules</strong></a>
+          <a href="#academy-conditions"><FileText size={20} strokeWidth={1.7} aria-hidden="true" /><strong>Terms and conditions</strong></a>
+          <a href="#academy-registration"><ClipboardCheck size={20} strokeWidth={1.7} aria-hidden="true" /><strong>Registration</strong></a>
+        </nav>
+      </div>
 
       <section className="section academy-membership-section" id="membership">
         <div className="site-shell academy-terms-reading-grid">
@@ -228,45 +207,7 @@ export default function JuniorAcademyTermsPage() {
             <CalendarDays size={21} aria-hidden="true" />
             <p>Amounts are calculated from the published per-lesson rate and the number of scheduled sessions.</p>
           </div>
-          <div className="academy-schedule-list">
-            {academySchedules.map((schedule, index) => {
-              const rate = academyRates[schedule.rate];
-              return (
-                <details key={schedule.title} open={index === 0}>
-                  <summary>
-                    <span>{schedule.title}</span>
-                    <ChevronDown size={19} aria-hidden="true" />
-                  </summary>
-                  <div className="academy-schedule-panel">
-                    {schedule.note ? <p>{schedule.note}</p> : null}
-                    <div className="academy-schedule-table-wrap">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Day</th><th>Sessions</th><th>Dates</th><th>Grassroots</th>
-                            <th>Groups 7+</th><th>Individual</th><th>Family sharing</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {schedule.rows.map(([day, sessions, dates]) => (
-                            <tr key={day}>
-                              <th scope="row">{day}</th>
-                              <td>{sessions}</td>
-                              <td>{dates}</td>
-                              <td>{formatRand(rate.grassroots * sessions)}</td>
-                              <td>{formatRand(rate.group * sessions)}</td>
-                              <td>{formatRand(rate.individual * sessions)}</td>
-                              <td>{formatRand(rate.family * sessions)}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </details>
-              );
-            })}
-          </div>
+          <ScheduleAccordion />
         </div>
       </section>
 
@@ -277,8 +218,8 @@ export default function JuniorAcademyTermsPage() {
             <h2>Terms and conditions</h2>
             <p>Last updated 18 July 2026</p>
           </div>
-          <div className="academy-terms-disclosures">
-            <TermsBlock id="safeguarding" title="Safety and safeguarding" open>
+          <TermsAccordion>
+            <TermsItem id="safeguarding" title="Safety and safeguarding">
               <p>
                 Pure Motion Golf Academy takes junior safety seriously, and its coaches are
                 Guardian Certified. Parents and the academy work together to keep juniors safer.
@@ -288,9 +229,9 @@ export default function JuniorAcademyTermsPage() {
                 <li>Add the office number, <a href="https://wa.me/27762470501" target="_blank" rel="noreferrer">+27 76 247 0501</a>, so the academy can be told if collection will be late.</li>
                 <li>Include all medical, accessibility or other information the academy needs when enrolling the child.</li>
               </ul>
-            </TermsBlock>
+            </TermsItem>
 
-            <TermsBlock id="fees-and-penalties" title="Registration, fees and penalties">
+            <TermsItem id="fees-and-penalties" title="Registration, fees and penalties">
               <ul>
                 <li>Membership runs from January to December and ends on 31 December.</li>
                 <li>The R335 annual membership fee is non-refundable. Pro-rata membership fees are available after January.</li>
@@ -301,9 +242,9 @@ export default function JuniorAcademyTermsPage() {
                 <li>A 5% fee is charged on overdue accounts.</li>
                 <li>Families unable to commit to advance payment before the ninth of each month should consider a private Junior Package.</li>
               </ul>
-            </TermsBlock>
+            </TermsItem>
 
-            <TermsBlock id="missed-lessons" title="Late arrivals, missed lessons and schedule changes">
+            <TermsItem id="missed-lessons" title="Late arrivals, missed lessons and schedule changes">
               <ul>
                 <li>Juniors should arrive five to ten minutes early to check in and warm up. Late arrivals receive only the remaining lesson time.</li>
                 <li>Non-emergency cancellations and missed lessons are forfeited and billed because the coach has committed the scheduled time.</li>
@@ -312,18 +253,18 @@ export default function JuniorAcademyTermsPage() {
                 <li>Substitute lessons cannot be accommodated for Grassroots or Groups 7+. Individual lessons may be rescheduled with adequate notice when coach availability allows, but this is not guaranteed.</li>
                 <li>Give the coach 14 days’ notice for a programme, scheduled-day or scheduled-time change.</li>
               </ul>
-            </TermsBlock>
+            </TermsItem>
 
-            <TermsBlock id="weather-and-coaches" title="Weather and coach availability">
+            <TermsItem id="weather-and-coaches" title="Weather and coach availability">
               <ul>
                 <li>Where possible, lessons continue indoors during inclement weather. The coach will confirm arrangements on the morning of the lesson.</li>
                 <li>If an indoor lesson is impossible, the academy will provide a replacement date. A weather-cancelled lesson is credited only when a replacement cannot be scheduled.</li>
                 <li>If an individual coach is unavailable, the lesson is rescheduled.</li>
                 <li>For groups, another qualified coach will teach wherever possible. If no replacement is available, the lesson is cancelled and credited.</li>
               </ul>
-            </TermsBlock>
+            </TermsItem>
 
-            <TermsBlock id="cancellations" title="Temporary and full cancellations">
+            <TermsItem id="cancellations" title="Temporary and full cancellations">
               <ul>
                 <li>For a one-calendar-month absence, such as exams, give at least one calendar month’s notice by emailing <a href="mailto:juniors@puremotiongolf.com">juniors@puremotiongolf.com</a>.</li>
                 <li>The absent month is billed. If the child returns the following month, 50% of those lessons is credited.</li>
@@ -333,16 +274,16 @@ export default function JuniorAcademyTermsPage() {
                 <li>Notice submitted after the first day of a month runs for 30 days from the written-notice date.</li>
                 <li>Maximum group sizes are four for Grassroots and six for Groups 7+. If a group drops below three, a junior may need to move to another available group after discussion with the coach.</li>
               </ul>
-            </TermsBlock>
+            </TermsItem>
 
-            <TermsBlock id="dress-code" title="Dress code and facility rules">
+            <TermsItem id="dress-code" title="Dress code and facility rules">
               <p>
                 Children must wear closed shoes or takkies when attending lessons or playing at
                 the club. T-shirts may be worn, but tracksuits are not permitted.
               </p>
-            </TermsBlock>
+            </TermsItem>
 
-            <TermsBlock id="default" title="Default and termination">
+            <TermsItem id="default" title="Default and termination">
               <p>
                 If a parent or legal guardian fails to pay fees, penalties or other amounts on time,
                 or breaches this agreement, Pure Motion Golf Academy may provide seven calendar
@@ -350,9 +291,9 @@ export default function JuniorAcademyTermsPage() {
                 academy’s right to recover amounts due, damages caused by the breach, legal costs,
                 attorney-and-client costs or collection charges.
               </p>
-            </TermsBlock>
+            </TermsItem>
 
-            <TermsBlock id="indemnity" title="Undertaking, indemnity and privacy">
+            <TermsItem id="indemnity" title="Undertaking, indemnity and privacy">
               <ul>
                 <li>Registration creates a legally binding commitment to pay all fees and follow the academy’s rules and regulations.</li>
                 <li>Golf carries risks including slips, stray balls or clubs, golf-cart incidents, lightning, power-line risks, animals and the actions of other people. Lessons and facility use are undertaken at the golfer’s own risk.</li>
@@ -363,8 +304,8 @@ export default function JuniorAcademyTermsPage() {
               <p>
                 Read the academy’s <a href="https://puremotiongolf.com/privacy-policy/" target="_blank" rel="noreferrer">Privacy Policy</a> for further information.
               </p>
-            </TermsBlock>
-          </div>
+            </TermsItem>
+          </TermsAccordion>
         </div>
       </section>
 

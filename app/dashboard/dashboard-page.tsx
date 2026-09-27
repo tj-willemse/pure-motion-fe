@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { ToastMessage } from "@/components/toast-message";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
+import { OomDashboard, type DashboardOomRegistration } from "@/components/order-of-merit/oom-dashboard";
 import { dashboardNavigation } from "@/lib/dashboard-navigation";
 import { requireDashboardUser } from "@/lib/dashboard";
 import {
@@ -98,12 +99,73 @@ async function loadBookings(user: Awaited<ReturnType<typeof requireDashboardUser
   }));
 }
 
+async function loadOomRegistrations(user: Awaited<ReturnType<typeof requireDashboardUser>>) {
+  const { data, error } = await user.supabase
+    .from("oom_registrations")
+    .select("id,reference,parent_first_name,parent_last_name,parent_email,player_first_name,player_known_as,player_last_name,division,jam_member,total_cents,status,payment_deadline,submitted_at,staff_notes,leaderboard_photo_path")
+    .order("submitted_at", { ascending: false });
+
+  if (error) return { registrations: [] as DashboardOomRegistration[], databaseReady: false };
+  const rows = data ?? [];
+  const ids = rows.map((item) => item.id);
+  const [roundsResult, paymentsResult] = await Promise.all([
+    ids.length
+      ? user.supabase.from("oom_registration_rounds").select("registration_id,round_id").in("registration_id", ids)
+      : Promise.resolve({ data: [] }),
+    ids.length
+      ? user.supabase.from("oom_payments").select("*").in("registration_id", ids).order("created_at", { ascending: false })
+      : Promise.resolve({ data: [] }),
+  ]);
+
+  const roundMap = new Map<string, string[]>();
+  for (const item of roundsResult.data ?? []) {
+    roundMap.set(item.registration_id, [...(roundMap.get(item.registration_id) ?? []), item.round_id]);
+  }
+  const paymentMap = new Map<string, DashboardOomRegistration["paymentStatus"]>();
+  const testPayments = new Set<string>();
+  for (const item of paymentsResult.data ?? []) {
+    if (!paymentMap.has(item.registration_id) && item.processing_mode === "test") testPayments.add(item.registration_id);
+    if (!paymentMap.has(item.registration_id)) paymentMap.set(item.registration_id, item.status as DashboardOomRegistration["paymentStatus"]);
+  }
+
+  const photoEntries = await Promise.all(rows.map(async (item) => {
+    if (!item.leaderboard_photo_path) return [item.id, undefined] as const;
+    const { data: signed } = await user.supabase.storage.from("oom-player-photos").createSignedUrl(item.leaderboard_photo_path, 3600);
+    return [item.id, signed?.signedUrl] as const;
+  }));
+  const photos = new Map(photoEntries);
+
+  return {
+    databaseReady: true,
+    registrations: rows.map((item) => ({
+      id: item.id,
+      reference: `${item.reference}${testPayments.has(item.id) ? " · TEST" : ""}`,
+      player: `${item.player_known_as || item.player_first_name} ${item.player_last_name}`,
+      parent: `${item.parent_first_name} ${item.parent_last_name}`,
+      parentEmail: item.parent_email,
+      division: item.division as DashboardOomRegistration["division"],
+      roundIds: roundMap.get(item.id) ?? [],
+      jamMember: item.jam_member,
+      amountCents: item.total_cents,
+      status: item.status as DashboardOomRegistration["status"],
+      paymentStatus: paymentMap.get(item.id) ?? "pending",
+      paymentDeadline: item.payment_deadline,
+      submittedAt: item.submitted_at,
+      staffNotes: item.staff_notes ?? "",
+      photoUrl: photos.get(item.id),
+    })),
+  };
+}
+
 export async function DashboardPage({ section = "overview", error, message }: DashboardPageProps) {
   const user = await requireDashboardUser();
   const allowedSections = dashboardNavigation[user.role].map((item) =>
     item.href === "/dashboard" ? "overview" : item.href.split("/").pop() || "overview",
   );
   if (!allowedSections.includes(section)) redirect("/dashboard");
+  const oom = section === "order-of-merit"
+    ? await loadOomRegistrations(user)
+    : { registrations: [] as DashboardOomRegistration[], databaseReady: true };
 
   return (
     <main id="main-content" className="dashboard-content">
@@ -117,6 +179,7 @@ export async function DashboardPage({ section = "overview", error, message }: Da
       {section === "clients" && user.role === "coach" && <Clients user={user} />}
       {section === "people" && ["admin", "receptionist"].includes(user.role) && <People user={user} />}
       {section === "services" && ["admin", "receptionist"].includes(user.role) && <Services user={user} />}
+      {section === "order-of-merit" && <OomDashboard role={user.role} registrations={oom.registrations} databaseReady={oom.databaseReady} />}
       {section === "audit" && user.role === "admin" && <Audit user={user} />}
     </main>
   );

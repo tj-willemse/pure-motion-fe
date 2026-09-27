@@ -18,14 +18,28 @@ export const site = {
   language: "en-ZA",
   locations: [
     {
+      id: "durbanville",
+      bookable: true,
+      status: "",
       name: "Durbanville Golf Club",
       shortName: "Durbanville",
       region: "Northern Suburbs, Cape Town",
     },
     {
+      id: "hazendal",
+      bookable: true,
+      status: "",
       name: "Hazendal Golf, Stellenbosch",
       shortName: "Hazendal",
       region: "Stellenbosch",
+    },
+    {
+      id: "atlantic-beach",
+      bookable: false,
+      status: "Opening October 2026",
+      name: "Atlantic Beach Academy by Pure Motion",
+      shortName: "Atlantic Beach",
+      region: "Atlantic Beach",
     },
   ],
 } as const;
@@ -63,12 +77,12 @@ export const navItems: readonly NavItem[] = [
     children: [
       { label: "Free assessment", href: "/juniors#assessment", art: "check" },
       { label: "Junior Academy", href: "/juniors#academy", art: "graduation" },
-      { label: "Order of Merit", href: "/juniors#order-of-merit", art: "trophy", tone: "dark" },
+      { label: "Order of Merit", href: "/juniors/order-of-merit", art: "trophy", tone: "dark" },
       { label: "Holiday programmes", href: "/juniors#holiday-programmes", art: "sun" },
       { label: "School Team Golf", href: "/juniors#school-team-golf", art: "users" },
       { label: "Calendar", href: "/juniors#calendar", art: "calendar" },
       { label: "Academy fees & terms", href: "/juniors/academy-terms", art: "check" },
-      { label: "Academy registration", href: "/juniors/academy-registration", art: "calendar" },
+      { label: "JAM registration", href: "/juniors/academy-registration", art: "calendar" },
     ],
   },
   {

@@ -67,3 +67,30 @@ After this one-time bootstrap, administrators can assign roles from **Dashboard 
 - role-aware client, coach, receptionist and admin access.
 
 If the CLI cannot access the project, paste the complete migration into the Supabase SQL Editor and run it once. Then bootstrap the first administrator with the query above. Do not run only part of the migration.
+
+## Order of Merit registration workflow
+
+After the earlier auth and portal migrations have been applied, run the complete
+`20260926153000_order_of_merit_operations.sql` migration in the Supabase SQL Editor.
+It creates:
+
+- the editable season and round records;
+- atomic capacity holds and duplicate-player protection;
+- registration snapshots linked to existing users/dependents when possible;
+- provider-neutral payment records that can later use Yoco;
+- private player-photo storage and role-aware access;
+- staff status controls and audit events.
+
+Do not run isolated sections of the file. The functions depend on the tables,
+policies and seeded 2026 season records created earlier in the same migration.
+
+Private photograph uploads also require `SUPABASE_SERVICE_ROLE_KEY` in the server
+environment. Email receipts require `RESEND_API_KEY`, `REGISTRATION_FROM_EMAIL`
+and `REGISTRATION_TEAM_EMAIL`. These values are server-only and must never use a
+`NEXT_PUBLIC_` prefix.
+# Yoco checkout (manual setup)
+
+After the Order of Merit operations migration, run
+`migrations/20260927110000_oom_yoco_checkout.sql` manually in SQL Editor.
+This adds test/live payment tracking and a service-role-only, idempotent webhook reconciliation function.
+See `../docs/yoco-checkout-setup.md` for environment and webhook setup. No provider secrets belong in SQL.

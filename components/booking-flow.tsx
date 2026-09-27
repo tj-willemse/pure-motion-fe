@@ -10,7 +10,7 @@ import {
   MapPin,
   UserRound,
 } from "lucide-react";
-import { coaches, formatRand, services } from "@/lib/site";
+import { coaches, formatRand, services, site } from "@/lib/site";
 
 type BookingFlowProps = {
   initialService?: string;
@@ -18,10 +18,7 @@ type BookingFlowProps = {
   initialLocation?: string;
 };
 
-const locations = [
-  { id: "durbanville", name: "Durbanville Golf Club", short: "Durbanville", note: "Northern Suburbs" },
-  { id: "hazendal", name: "Hazendal Golf, Stellenbosch", short: "Hazendal", note: "Stellenbosch" },
-] as const;
+const locations = site.locations;
 
 const days = [
   { id: "tue-22", day: "Tue", date: "22", month: "Sep" },
@@ -38,7 +35,7 @@ export function BookingFlow({ initialService, initialCoach, initialLocation }: B
     ? initialService
     : undefined;
   const validCoach = coaches.some((coach) => coach.id === initialCoach) ? initialCoach : undefined;
-  const validLocation = locations.some((location) => location.id === initialLocation)
+  const validLocation = locations.some((location) => location.id === initialLocation && location.bookable)
     ? initialLocation
     : undefined;
   const [serviceId, setServiceId] = useState<string | undefined>(validService);
@@ -104,7 +101,7 @@ export function BookingFlow({ initialService, initialCoach, initialLocation }: B
         </div>
         <div className="summary-items">
           <SummaryRow icon={CalendarDays} label="Lesson" value={selectedService?.shortTitle} />
-          <SummaryRow icon={MapPin} label="Location" value={selectedLocation?.short} />
+          <SummaryRow icon={MapPin} label="Location" value={selectedLocation?.shortName} />
           <SummaryRow icon={UserRound} label="Coach" value={selectedCoach?.name} />
           <SummaryRow
             icon={Clock3}
@@ -168,10 +165,10 @@ export function BookingFlow({ initialService, initialCoach, initialLocation }: B
         {step === 2 && (
           <div className="location-options">
             {locations.map((location) => (
-              <button type="button" key={location.id} onClick={() => chooseLocation(location.id)}>
+              <button type="button" key={location.id} disabled={!location.bookable} onClick={() => chooseLocation(location.id)}>
                 <span className="location-option-icon"><MapPin size={21} /></span>
                 <strong>{location.name}</strong>
-                <small>{location.note}</small>
+                <small>{location.status || location.region}</small>
                 <span className="choose-label">Choose <ArrowRight size={16} /></span>
               </button>
             ))}

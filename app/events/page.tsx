@@ -132,7 +132,7 @@ export default function EventsPage() {
         <div className="site-shell">
           <div className="events-section-head">
             <div><h2>Visit, call or send a message.</h2></div>
-            <p>Lauren and Ofelia assist with reception and bookings. Coaches are available seven days a week across both locations.</p>
+            <p>Lauren and Ofelia assist with reception and bookings at Durbanville and Hazendal. Atlantic Beach Academy by Pure Motion opens in October 2026.</p>
           </div>
           <div className="contact-location-grid">
             <article>
@@ -146,6 +146,12 @@ export default function EventsPage() {
               <h3>Hazendal Golf</h3>
               <p>Bottelary Road, Stellenbosch, 7599<br />Western Cape, South Africa</p>
               <a href={hazendalMap} target="_blank" rel="noreferrer">Get directions <ExternalLink size={15} /></a>
+            </article>
+            <article className="contact-direct-card">
+              <span>03</span><MapPin size={25} strokeWidth={1.6} />
+              <h3>Atlantic Beach Academy by Pure Motion</h3>
+              <p>Opening October 2026. Address, opening hours and booking availability will be confirmed.</p>
+              <a href="tel:+27762470501">Enquire with the academy <Phone size={15} /></a>
             </article>
             <article className="contact-direct-card">
               <span>Reception</span><UsersRound size={25} strokeWidth={1.6} />

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireDashboardUser } from "@/lib/dashboard";
+import { sendRegistrationStatusEmail } from "@/lib/registration-email";
 
 function text(formData: FormData, field: string) {
   const value = formData.get(field);
@@ -123,6 +124,60 @@ export async function removeDependent(formData: FormData) {
   await recordAudit(user.supabase, user.userId, "dependent.removed", "dependent", dependentId);
   revalidatePath("/dashboard/family");
   dashboardRedirect("family", "message", "Family member removed.");
+}
+
+const oomStatusSchema = z.object({
+  registrationId: z.string().uuid("Invalid registration."),
+  registrationStatus: z.enum(["awaiting_payment", "confirmed", "declined", "cancelled", "expired"]),
+  paymentStatus: z.enum(["pending", "paid", "failed", "expired", "refunded", "waived"]),
+  staffNotes: z.string().trim().max(1500, "Keep notes under 1,500 characters."),
+});
+
+export async function updateOomRegistrationStatus(formData: FormData) {
+  const user = await requireDashboardUser();
+  const returnPath = text(formData, "returnPath");
+  if (!["admin", "receptionist"].includes(user.role)) {
+    dashboardRedirect("order-of-merit", "error", "You do not have access to registration controls.");
+  }
+
+  const result = oomStatusSchema.safeParse({
+    registrationId: text(formData, "registrationId"),
+    registrationStatus: text(formData, "registrationStatus"),
+    paymentStatus: text(formData, "paymentStatus"),
+    staffNotes: text(formData, "staffNotes"),
+  });
+  if (!result.success) dashboardRedirect("order-of-merit", "error", result.error.issues[0].message);
+
+  const { error } = await user.supabase.rpc("manage_oom_registration", {
+    target_registration: result.data.registrationId,
+    new_registration_status: result.data.registrationStatus,
+    new_payment_status: result.data.paymentStatus,
+    new_staff_notes: result.data.staffNotes || null,
+  });
+  if (error) dashboardRedirect("order-of-merit", "error", "The registration status could not be updated.");
+
+  const { data: registration } = await user.supabase
+    .from("oom_registrations")
+    .select("reference,parent_first_name,parent_last_name,parent_email,player_first_name,player_known_as,player_last_name")
+    .eq("id", result.data.registrationId)
+    .maybeSingle();
+  if (registration) {
+    await sendRegistrationStatusEmail({
+      reference: registration.reference,
+      parentName: `${registration.parent_first_name} ${registration.parent_last_name}`,
+      parentEmail: registration.parent_email,
+      playerName: `${registration.player_known_as || registration.player_first_name} ${registration.player_last_name}`,
+      registrationStatus: result.data.registrationStatus,
+      paymentStatus: result.data.paymentStatus,
+    });
+  }
+
+  revalidatePath("/dashboard/order-of-merit");
+  if (/^\/dashboard\/order-of-merit\/registrations\/[0-9a-f-]{36}$/.test(returnPath)) {
+    revalidatePath(returnPath);
+    redirect(`${returnPath}?message=${encodeURIComponent("Registration status updated.")}`);
+  }
+  dashboardRedirect("order-of-merit", "message", "Registration status updated.");
 }
 
 const bookingSchema = z.object({
