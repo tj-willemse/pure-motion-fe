@@ -8,6 +8,10 @@ export function paymentPath(id: string) {
   return `/payments/oom/${signPaymentLink(id, secret)}`;
 }
 
+export function paymentHoldOpen(deadline: string) {
+  return Date.parse(deadline) > Date.now();
+}
+
 export async function getPayment(token: string) {
   const secret = process.env.PAYMENT_LINK_SECRET;
   const id = secret && verifyPaymentLink(token, secret);

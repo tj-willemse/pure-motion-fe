@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, CircleCheck, Info, ShieldCheck, Upload } from "lucide-react";
 import { useMemo, useState, useTransition } from "react";
+import type { CustomerAccount } from "@/lib/customer-account-types";
 import { submitOomRegistration, type OomSubmissionResult } from "./actions";
 import {
   formatOomDate,
@@ -92,9 +93,9 @@ function availabilityLabel(round: OomRound, division: OomDivisionId | "") {
   return round.note ?? "Registration available";
 }
 
-export function OomRegistrationForm() {
+export function OomRegistrationForm({ account, today }: { account: CustomerAccount; today: string }) {
   const [step, setStep] = useState(0);
-  const [details, setDetails] = useState(initialDetails);
+  const [details, setDetails] = useState({ ...initialDetails, registrationDate: today, parentFirstName: account.firstName, parentSurname: account.lastName, email: account.email, phone: account.phone });
   const [division, setDivision] = useState<OomDivisionId | "">("");
   const [selectedRoundIds, setSelectedRoundIds] = useState<string[]>([]);
   const [privacyConsent, setPrivacyConsent] = useState(false);
@@ -237,6 +238,10 @@ export function OomRegistrationForm() {
           {step === 0 && (
             <fieldset>
               <legend>Adult and player details</legend>
+              <Field label="Saved family golfer"><select defaultValue="" onChange={(event) => {
+                const junior = account.family.find((item) => item.id === event.target.value);
+                setDetails((current) => ({ ...current, playerFirstName: junior?.first_name ?? "", playerSurname: junior?.last_name ?? "", dateOfBirth: junior?.date_of_birth ?? "" }));
+              }}><option value="">Enter a new junior</option>{account.family.map((junior) => <option key={junior.id} value={junior.id}>{junior.first_name} {junior.last_name}</option>)}</select></Field>
               <p>These fields match the information collected by the official 2026 Order of Merit registration form.</p>
               <div className="oom-form-grid three">
                 <Field label="Today’s date" required><input type="date" value={details.registrationDate} onChange={(event) => update("registrationDate", event.target.value)} /></Field>
@@ -361,7 +366,7 @@ export function OomRegistrationForm() {
               <label className="oom-checkbox-row"><input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} /><span>I have read and accept the <Link href="#competition-terms">Order of Merit terms</Link>, payment and cancellation conditions, competition rules, risk acknowledgement, waiver and indemnity.</span></label>
               <div className="oom-form-notice"><ShieldCheck size={19} /><div><strong>Secure payment after registration.</strong><p>Your entry is saved first, with places held for 12 hours. Continue to Yoco checkout on the payment page. Live entries are confirmed only after payment is verified; test payments do not confirm places.</p></div></div>
               {submissionError && <div className="oom-form-notice is-error" role="alert"><Info size={19} /><div><strong>Registration not submitted.</strong><p>{submissionError}</p></div></div>}
-              <FormActions back={() => setStep(2)} next={submitRegistration} nextLabel={isSubmitting ? "Submitting…" : "Submit registration"} nextDisabled={!privacyConsent || !accepted || isSubmitting} />
+              <FormActions back={() => setStep(2)} next={submitRegistration} nextLabel={isSubmitting ? "Saving registration…" : "Continue to payment"} nextDisabled={!privacyConsent || !accepted || isSubmitting} />
             </fieldset>
           )}
         </form>

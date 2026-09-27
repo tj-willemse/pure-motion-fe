@@ -4,6 +4,7 @@ import { FormEvent, ReactNode, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, ShieldCheck } from "lucide-react";
 import { submitAcademyRegistration } from "./actions";
+import type { CustomerAccount } from "@/lib/customer-account-types";
 
 const registrationTypes = [
   ["returning", "Returning — has a Junior Academy membership and JAM number"],
@@ -40,7 +41,8 @@ const coaches = [
 
 type RegistrationType = typeof registrationTypes[number][0] | "";
 
-export function AcademyRegistrationForm() {
+export function AcademyRegistrationForm({ account }: { account: CustomerAccount }) {
+  const [junior, setJunior] = useState({ firstName: "", lastName: "", dateOfBirth: "" });
   const formRef = useRef<HTMLFormElement>(null);
   const [registrationType, setRegistrationType] = useState<RegistrationType>("");
   const [step, setStep] = useState(0);
@@ -87,6 +89,10 @@ export function AcademyRegistrationForm() {
       <div className="academy-form-card">
         <fieldset data-step="0" className={step === 0 ? "academy-form-panel active" : "academy-form-panel"}>
           <legend>Welcome to the 2026 Junior Academy</legend>
+          <Field label="Saved family golfer"><select defaultValue="" onChange={(event) => {
+            const member = account.family.find((item) => item.id === event.target.value);
+            setJunior({ firstName: member?.first_name ?? "", lastName: member?.last_name ?? "", dateOfBirth: member?.date_of_birth ?? "" });
+          }}><option value="">Enter a new junior</option>{account.family.map((member) => <option key={member.id} value={member.id}>{member.first_name} {member.last_name}</option>)}</select></Field>
           <p className="academy-form-lead">Welcome back, 2025 JAMmers—and a warm welcome to first-time families. Select the option that applies to this junior.</p>
           <div className="academy-choice-list">
             {registrationTypes.map(([value, label]) => (
@@ -113,13 +119,13 @@ export function AcademyRegistrationForm() {
               <legend>Parent or guardian details</legend>
               <CheckboxGroup label="How did you hear about the Junior Academy?" name="heard_about" options={["Previous member", "Internet search", "Email from Pure Motion", "Durbanville Golf Club", "Hazendal Golf, Stellenbosch", "Instagram", "Facebook", "Friends or family", "A Pure Motion coach", "Brochure", "Other"]} required={step === 1} />
               <div className="academy-form-grid two">
-                <Field label="First name" required><input name="parent_first_name" required={step === 1} autoComplete="given-name" /></Field>
-                <Field label="Surname" required><input name="parent_last_name" required={step === 1} autoComplete="family-name" /></Field>
+                <Field label="First name" required><input name="parent_first_name" defaultValue={account.firstName} required={step === 1} autoComplete="given-name" /></Field>
+                <Field label="Surname" required><input name="parent_last_name" defaultValue={account.lastName} required={step === 1} autoComplete="family-name" /></Field>
               </div>
-              <Field label="Email address" required><input name="parent_email" type="email" required={step === 1} autoComplete="email" /></Field>
+              <Field label="Email address" required><input name="parent_email" defaultValue={account.email} type="email" required={step === 1} autoComplete="email" /></Field>
               <Field label="Relationship to child" required><input name="parent_relationship" required={step === 1} placeholder="Mom, dad, guardian…" /></Field>
               <div className="academy-form-grid two">
-                <Field label="Mobile number for calls" required hint="Example: +27 0##-###-####"><input name="parent_phone" type="tel" required={step === 1} autoComplete="tel" /></Field>
+                <Field label="Mobile number for calls" required hint="Example: +27 0##-###-####"><input name="parent_phone" defaultValue={account.phone} type="tel" required={step === 1} autoComplete="tel" /></Field>
                 <Field label="WhatsApp number if different"><input name="parent_whatsapp" type="tel" /></Field>
               </div>
               <div className="academy-form-grid two">
@@ -170,13 +176,13 @@ export function AcademyRegistrationForm() {
               <legend>Junior and programme details</legend>
               <p className="academy-form-lead">Complete one form per child. Programme and schedule selections are preferences; the academy team will confirm availability.</p>
               <div className="academy-form-grid three">
-                <Field label="First name" required><input name="junior_first_name" required={step === 5} /></Field>
+                <Field label="First name" required><input name="junior_first_name" value={junior.firstName} onChange={(event) => setJunior((current) => ({ ...current, firstName: event.target.value }))} required={step === 5} /></Field>
                 <Field label="Known as / nickname"><input name="junior_nickname" /></Field>
-                <Field label="Surname" required><input name="junior_last_name" required={step === 5} /></Field>
+                <Field label="Surname" required><input name="junior_last_name" value={junior.lastName} onChange={(event) => setJunior((current) => ({ ...current, lastName: event.target.value }))} required={step === 5} /></Field>
               </div>
               <div className="academy-form-grid three">
                 <Field label="Gender" required><select name="junior_gender" required={step === 5}><option value="">Select</option><option>Girl</option><option>Boy</option></select></Field>
-                <Field label="Date of birth" required><input name="junior_date_of_birth" type="date" required={step === 5} /></Field>
+                <Field label="Date of birth" required><input name="junior_date_of_birth" value={junior.dateOfBirth} onChange={(event) => setJunior((current) => ({ ...current, dateOfBirth: event.target.value }))} type="date" required={step === 5} /></Field>
                 <Field label="Current age" required><input name="junior_age" type="number" min="4" max="18" required={step === 5} /></Field>
               </div>
               <div className="academy-form-grid two">
@@ -206,10 +212,10 @@ export function AcademyRegistrationForm() {
         {isReEnrollment && (
           <fieldset data-step="1" className={step === 1 ? "academy-form-panel active" : "academy-form-panel"}>
             <legend>Re-enrolment details</legend>
-            <div className="academy-form-grid two"><Field label="Parent/guardian first name" required><input name="parent_first_name" required={step === 1} /></Field><Field label="Parent/guardian surname" required><input name="parent_last_name" required={step === 1} /></Field></div>
-            <Field label="Parent/guardian email" required><input name="parent_email" type="email" required={step === 1} /></Field>
-            <div className="academy-form-grid two"><Field label="Relationship to child" required><input name="parent_relationship" required={step === 1} /></Field><Field label="Mobile number" required><input name="parent_phone" type="tel" required={step === 1} /></Field></div>
-            <div className="academy-form-grid two"><Field label="Junior first name" required><input name="junior_first_name" required={step === 1} /></Field><Field label="Junior surname" required><input name="junior_last_name" required={step === 1} /></Field></div>
+            <div className="academy-form-grid two"><Field label="Parent/guardian first name" required><input name="parent_first_name" defaultValue={account.firstName} required={step === 1} /></Field><Field label="Parent/guardian surname" required><input name="parent_last_name" defaultValue={account.lastName} required={step === 1} /></Field></div>
+            <Field label="Parent/guardian email" required><input name="parent_email" defaultValue={account.email} type="email" required={step === 1} /></Field>
+            <div className="academy-form-grid two"><Field label="Relationship to child" required><input name="parent_relationship" required={step === 1} /></Field><Field label="Mobile number" required><input name="parent_phone" defaultValue={account.phone} type="tel" required={step === 1} /></Field></div>
+            <div className="academy-form-grid two"><Field label="Junior first name" required><input name="junior_first_name" value={junior.firstName} onChange={(event) => setJunior((current) => ({ ...current, firstName: event.target.value }))} required={step === 1} /></Field><Field label="Junior surname" required><input name="junior_last_name" value={junior.lastName} onChange={(event) => setJunior((current) => ({ ...current, lastName: event.target.value }))} required={step === 1} /></Field></div>
             <RadioGroup label="Previous programme" name="previous_programme" options={programmeOptions.slice(0, 6)} required={step === 1} />
             <Field label="Previous coach" required><select name="previous_coach" required={step === 1}><option value="">Select a coach</option>{["Christiaan Basson (Hazendal)", "Jurian Mostert (Hazendal)", "Leandri van Rooyen (Durbanville)", "Luzelle Booyens (Durbanville)", "Matthew Kilfoil (Durbanville)", "MS Calitz (Hazendal)", "Paul McKenzie (Durbanville)"].map((coach) => <option key={coach}>{coach}</option>)}</select></Field>
             <ScheduleFields prefix="previous" active={step === 1} label="Previous lesson" />

@@ -28,7 +28,12 @@ export async function updateSession(request: NextRequest) {
   );
 
   // getClaims verifies the token; do not authorize from an unverified session cookie.
-  await supabase.auth.getClaims();
+  const claims = (await supabase.auth.getClaims()).data?.claims;
+  if (!claims?.sub && request.nextUrl.pathname.startsWith("/dashboard")) {
+    const destination = new URL("/login", request.url);
+    destination.searchParams.set("next", request.nextUrl.pathname + request.nextUrl.search);
+    return NextResponse.redirect(destination);
+  }
 
   return response;
 }

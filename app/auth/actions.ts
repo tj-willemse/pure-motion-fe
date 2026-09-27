@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { safeNext } from "@/lib/auth-next";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Enter a valid email address."),
@@ -30,8 +31,8 @@ const registrationSchema = z
     path: ["confirmPassword"],
   });
 
-function portalRedirect(type: "error" | "message", message: string, path = "/login"): never {
-  redirect(`${path}?${type}=${encodeURIComponent(message)}`);
+function portalRedirect(type: "error" | "message", message: string, path = "/login", next = "/dashboard"): never {
+  redirect(`${path}?${type}=${encodeURIComponent(message)}&next=${encodeURIComponent(next)}`);
 }
 
 function formText(formData: FormData, field: string) {
@@ -40,12 +41,13 @@ function formText(formData: FormData, field: string) {
 }
 
 export async function signIn(formData: FormData) {
+  const next = safeNext(formText(formData, "next"));
   const result = loginSchema.safeParse({
     email: formText(formData, "email"),
     password: formText(formData, "password"),
   });
 
-  if (!result.success) portalRedirect("error", result.error.issues[0].message);
+  if (!result.success) portalRedirect("error", result.error.issues[0].message, "/login", next);
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(result.data);
@@ -54,16 +56,18 @@ export async function signIn(formData: FormData) {
     portalRedirect(
       "error",
       "Please verify your email before signing in. Check your inbox for the confirmation link.",
+      "/login", next,
     );
   }
 
-  if (error) portalRedirect("error", "The email address or password is incorrect.");
+  if (error) portalRedirect("error", "The email address or password is incorrect.", "/login", next);
 
   revalidatePath("/", "layout");
-  redirect("/dashboard?message=Welcome%20back.");
+  redirect(next);
 }
 
 export async function register(formData: FormData) {
+  const next = safeNext(formText(formData, "next"));
   const result = registrationSchema.safeParse({
     firstName: formText(formData, "firstName"),
     lastName: formText(formData, "lastName"),
@@ -73,17 +77,17 @@ export async function register(formData: FormData) {
   });
 
   if (!result.success) {
-    portalRedirect("error", result.error.issues[0].message, "/register");
+    portalRedirect("error", result.error.issues[0].message, "/register", next);
   }
 
   const requestHeaders = await headers();
   const origin = requestHeaders.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: result.data.email,
     password: result.data.password,
     options: {
-      emailRedirectTo: `${origin}/auth/confirm?next=/dashboard`,
+      emailRedirectTo: `${origin}/auth/confirm?next=${encodeURIComponent(next)}`,
       data: {
         first_name: result.data.firstName,
         last_name: result.data.lastName,
@@ -95,14 +99,15 @@ export async function register(formData: FormData) {
     portalRedirect(
       "error",
       "We could not create your account. Check your details or sign in if you already registered.",
-      "/register",
+      "/register", next,
     );
   }
 
+  if (data.session) redirect(next);
   portalRedirect(
     "message",
     "Check your email to confirm your Pure Motion account.",
-    "/login",
+    "/login", next,
   );
 }
 

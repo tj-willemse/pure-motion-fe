@@ -22,6 +22,7 @@ export const requireDashboardUser = cache(async function requireDashboardUser() 
 
   const roles = rolesResult.data?.map(({ role }) => role) ?? ["client"];
   const profile = profileResult.data;
+  if (profile?.is_active === false) throw new Error("Your account is inactive. Contact the academy.");
 
   return {
     supabase,

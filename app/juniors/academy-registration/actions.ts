@@ -15,6 +15,8 @@ const registrationSchema = z.object({
 });
 
 export async function submitAcademyRegistration(formData: FormData) {
+  const supabase = await createClient();
+  if (!(await supabase.auth.getClaims()).data?.claims?.sub) redirect("/login?next=%2Fjuniors%2Facademy-registration");
   if (String(formData.get("website") ?? "")) redirect("/juniors/academy-registration?message=Registration%20received.");
 
   const payload = Object.fromEntries(
@@ -27,11 +29,10 @@ export async function submitAcademyRegistration(formData: FormData) {
     redirect("/juniors/academy-registration?error=Please%20complete%20all%20required%20registration%20details.");
   }
 
-  const supabase = await createClient();
   const { error } = await supabase.rpc("submit_junior_academy_registration", { payload });
   if (error) {
     redirect("/juniors/academy-registration?error=We%20could%20not%20save%20the%20registration.%20Please%20try%20again.");
   }
 
-  redirect("/juniors/academy-registration?message=Registration%20received.%20The%20academy%20team%20will%20confirm%20the%20programme%20and%20payment%20details.");
+  redirect("/dashboard/academy?message=Registration%20received.%20The%20academy%20team%20will%20confirm%20your%20programme.");
 }

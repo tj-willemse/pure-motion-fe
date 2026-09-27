@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import { CustomerRegistrations } from "@/components/customer-registrations";
+import { services as serviceCatalogue, coaches as coachCatalogue, site } from "@/lib/site";
 import { ToastMessage } from "@/components/toast-message";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
 import { OomDashboard, type DashboardOomRegistration } from "@/components/order-of-merit/oom-dashboard";
@@ -31,6 +33,7 @@ import {
 } from "@/app/dashboard/actions";
 
 type DashboardPageProps = {
+  bookingSelection?: { service?: string; coach?: string; location?: string };
   section?: string;
   error?: string;
   message?: string;
@@ -64,13 +67,16 @@ function formatMoney(cents: number) {
 }
 
 async function loadBookings(user: Awaited<ReturnType<typeof requireDashboardUser>>): Promise<DashboardBooking[]> {
-  const { data = [] } = await user.supabase
+  let query = user.supabase
     .from("bookings")
     .select("id,client_id,dependent_id,coach_id,service_id,location_id,starts_at,ends_at,status,client_notes")
     .order("starts_at", { ascending: true });
+  if (user.role === "client") query = query.eq("client_id", user.userId);
+  const { data, error } = await query;
+  if (error) throw new Error("Bookings could not be loaded. Please retry.");
 
-  const bookings = data as BookingRow[];
-  if (!bookings.length) return demoBookings;
+  const bookings = (data ?? []) as BookingRow[];
+  if (!bookings.length) return user.role === "client" ? [] : demoBookings;
   const serviceIds = [...new Set(bookings.map((item) => item.service_id))];
   const locationIds = [...new Set(bookings.map((item) => item.location_id))];
   const profileIds = [...new Set(bookings.flatMap((item) => [item.client_id, item.coach_id].filter(Boolean) as string[]))];
@@ -157,13 +163,13 @@ async function loadOomRegistrations(user: Awaited<ReturnType<typeof requireDashb
   };
 }
 
-export async function DashboardPage({ section = "overview", error, message }: DashboardPageProps) {
+export async function DashboardPage({ section = "overview", error, message, bookingSelection }: DashboardPageProps) {
   const user = await requireDashboardUser();
   const allowedSections = dashboardNavigation[user.role].map((item) =>
     item.href === "/dashboard" ? "overview" : item.href.split("/").pop() || "overview",
   );
   if (!allowedSections.includes(section)) redirect("/dashboard");
-  const oom = section === "order-of-merit"
+  const oom = section === "order-of-merit" && user.role !== "client"
     ? await loadOomRegistrations(user)
     : { registrations: [] as DashboardOomRegistration[], databaseReady: true };
 
@@ -171,7 +177,7 @@ export async function DashboardPage({ section = "overview", error, message }: Da
     <main id="main-content" className="dashboard-content">
       <ToastMessage error={error} message={message} />
       {section === "overview" && <Overview user={user} />}
-      {section === "bookings" && <Bookings user={user} />}
+      {section === "bookings" && <Bookings user={user} selection={bookingSelection} />}
       {section === "family" && user.role === "client" && <Family user={user} />}
       {section === "profile" && <Profile user={user} />}
       {section === "schedule" && user.role === "coach" && <Schedule user={user} />}
@@ -179,7 +185,8 @@ export async function DashboardPage({ section = "overview", error, message }: Da
       {section === "clients" && user.role === "coach" && <Clients user={user} />}
       {section === "people" && ["admin", "receptionist"].includes(user.role) && <People user={user} />}
       {section === "services" && ["admin", "receptionist"].includes(user.role) && <Services user={user} />}
-      {section === "order-of-merit" && <OomDashboard role={user.role} registrations={oom.registrations} databaseReady={oom.databaseReady} />}
+      {section === "order-of-merit" && user.role !== "client" && <OomDashboard role={user.role} registrations={oom.registrations} databaseReady={oom.databaseReady} />}
+      {user.role === "client" && ["academy", "order-of-merit", "payments"].includes(section) && <CustomerRegistrations user={user} section={section} />}
       {section === "audit" && user.role === "admin" && <Audit user={user} />}
     </main>
   );
@@ -191,7 +198,7 @@ async function Overview({ user }: { user: Awaited<ReturnType<typeof requireDashb
   const upcoming = bookings.filter((item) => new Date(item.starts_at) >= new Date() && !["cancelled", "no_show"].includes(item.status));
 
   if (user.role === "client") {
-    const { count: familyCount = 0 } = await user.supabase.from("dependents").select("id", { count: "exact", head: true });
+    const { count: familyCount = 0 } = await user.supabase.from("dependents").select("id", { count: "exact", head: true }).eq("client_id", user.userId);
     return (
       <>
         {showingDemo && <DemoNotice />}
@@ -203,6 +210,7 @@ async function Overview({ user }: { user: Awaited<ReturnType<typeof requireDashb
         <Panel title="Next booking">
           {upcoming[0] ? <BookingSummary booking={upcoming[0]} /> : <Empty text="No upcoming booking. Use Bookings to request a lesson." />}
         </Panel>
+        <CustomerRegistrations user={user} section="overview" />
       </>
     );
   }
@@ -249,7 +257,7 @@ async function Overview({ user }: { user: Awaited<ReturnType<typeof requireDashb
   );
 }
 
-async function Bookings({ user }: { user: Awaited<ReturnType<typeof requireDashboardUser>> }) {
+async function Bookings({ user, selection }: { user: Awaited<ReturnType<typeof requireDashboardUser>>; selection?: DashboardPageProps["bookingSelection"] }) {
   const bookings = await loadBookings(user);
   const showingDemo = bookings.some((item) => item.isDemo);
   if (user.role !== "client") {
@@ -274,21 +282,28 @@ async function Bookings({ user }: { user: Awaited<ReturnType<typeof requireDashb
   const [servicesResult, locationsResult, dependentsResult, coachRolesResult] = await Promise.all([
     user.supabase.from("services").select("id,name,duration_minutes,price_cents").eq("is_active", true).order("name"),
     user.supabase.from("locations").select("id,name").eq("is_active", true).order("name"),
-    user.supabase.from("dependents").select("id,first_name,last_name").order("first_name"),
+    user.supabase.from("dependents").select("id,first_name,last_name").eq("client_id", user.userId).order("first_name"),
     user.supabase.from("user_roles").select("user_id").eq("role", "coach"),
   ]);
   const coachIds = coachRolesResult.data?.map((item) => item.user_id) ?? [];
   const { data: coaches = [] } = coachIds.length
     ? await user.supabase.from("profiles").select("id,first_name,last_name").in("id", coachIds).eq("is_active", true)
     : { data: [] };
+  const requestedService = serviceCatalogue.find((item) => item.id === selection?.service)?.title;
+  const requestedCoach = coachCatalogue.find((item) => item.id === selection?.coach)?.name;
+  const requestedLocation = site.locations.find((item) => item.id === selection?.location);
+  const serviceDefault = servicesResult.data?.find((item) => item.id === selection?.service || item.name === requestedService)?.id ?? "";
+  const locationDefault = locationsResult.data?.find((item) => item.id === selection?.location || (requestedLocation?.bookable && item.name.startsWith(requestedLocation.shortName)))?.id ?? "";
+  const coachDefault = coaches?.find((item) => item.id === selection?.coach || `${item.first_name} ${item.last_name}` === requestedCoach)?.id ?? "";
   return (
       <>
       {showingDemo && <DemoNotice />}
       <div className="dashboard-two-column">
         <Panel title="Request a booking">
+          <p>Choose your preferred date and time. The academy will confirm availability; this is a request, not an instant confirmed booking.</p>
           <form action={createBooking} className="dashboard-form">
             <Field label="Service">
-              <select name="serviceId" required defaultValue="">
+              <select name="serviceId" required defaultValue={serviceDefault}>
                 <option value="" disabled>Choose a service</option>
                 {(servicesResult.data ?? []).map((service) => <option key={service.id} value={service.id}>{service.name} · {formatMoney(service.price_cents)}</option>)}
               </select>
@@ -300,13 +315,13 @@ async function Bookings({ user }: { user: Awaited<ReturnType<typeof requireDashb
               </select>
             </Field>
             <Field label="Location">
-              <select name="locationId" required defaultValue="">
+              <select name="locationId" required defaultValue={locationDefault}>
                 <option value="" disabled>Choose a location</option>
                 {(locationsResult.data ?? []).map((location) => <option key={location.id} value={location.id}>{location.name}</option>)}
               </select>
             </Field>
             <Field label="Coach">
-              <select name="coachId" defaultValue="">
+              <select name="coachId" defaultValue={coachDefault}>
                 <option value="">Assign the best available coach</option>
                 {(coaches ?? []).map((coach) => <option key={coach.id} value={coach.id}>{coach.first_name} {coach.last_name}</option>)}
               </select>
@@ -328,12 +343,14 @@ async function Bookings({ user }: { user: Awaited<ReturnType<typeof requireDashb
 }
 
 async function Family({ user }: { user: Awaited<ReturnType<typeof requireDashboardUser>> }) {
-  const { data } = await user.supabase
+  const { data, error } = await user.supabase
     .from("dependents")
     .select("id,first_name,last_name,date_of_birth,notes")
+    .eq("client_id", user.userId)
     .order("first_name");
-  const showingDemo = !data?.length;
-  const dependents = data?.length ? data.map((item) => ({ ...item, isDemo: false })) : demoFamily;
+  if (error) throw new Error("Family members could not be loaded. Please retry.");
+  const showingDemo = false;
+  const dependents = (data ?? []).map((item) => ({ ...item, isDemo: false }));
   return (
     <>
       {showingDemo && <DemoNotice />}

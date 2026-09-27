@@ -10,6 +10,7 @@ import { SocialAuthButtons } from "@/components/social-auth-buttons";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { safeNext } from "@/lib/auth-next";
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -21,16 +22,17 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 type LoginPageProps = {
-  searchParams: Promise<{ error?: string; message?: string }>;
+  searchParams: Promise<{ error?: string; message?: string; next?: string }>;
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { error, message } = await searchParams;
+  const { error, message, next: requestedNext } = await searchParams;
+  const next = safeNext(requestedNext);
   const configured = isSupabaseConfigured();
   const supabase = configured ? await createClient() : null;
   const claims = supabase ? (await supabase.auth.getClaims()).data?.claims : null;
 
-  if (claims) redirect("/dashboard");
+  if (claims?.sub) redirect(next);
 
   return (
     <main id="main-content" className="portal-page auth-page">
@@ -58,6 +60,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             {!configured && <p className="portal-alert">The portal UI is ready. Add the Supabase project URL and publishable key to activate sign-in.</p>}
             {configured && <SocialAuthButtons />}
             <form action={signIn}>
+              <input type="hidden" name="next" value={next} />
               <label htmlFor="email">Email address</label>
               <input id="email" name="email" type="email" placeholder="you@example.com" autoComplete="email" required />
               <label htmlFor="password">Password</label>
@@ -75,7 +78,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <Link href="/" className="button button-outline auth-back-button">
               <ArrowLeft size={18} aria-hidden="true" /> Back to website
             </Link>
-            <p className="portal-help">New to Pure Motion? <Link href="/register">Create your account</Link></p>
+            <p className="portal-help">New to Pure Motion? <Link href={`/register?next=${encodeURIComponent(next)}`}>Create your account</Link></p>
           </div>
         </section>
       </div>

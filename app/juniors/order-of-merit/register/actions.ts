@@ -77,6 +77,9 @@ function boolean(formData: FormData, key: string) {
 }
 
 export async function submitOomRegistration(formData: FormData): Promise<OomSubmissionResult> {
+  const supabase = await createClient();
+  const claims = (await supabase.auth.getClaims()).data?.claims;
+  if (!claims?.sub) return { ok: false, error: "Your session expired. Sign in again before submitting your registration." };
   if (string(formData, "website")) return { ok: true, reference: "received" };
 
   const parsed = registrationSchema.safeParse({
@@ -126,7 +129,6 @@ export async function submitOomRegistration(formData: FormData): Promise<OomSubm
     handicap_index: parsed.data.handicap_index === "" ? "" : String(parsed.data.handicap_index),
   };
 
-  const supabase = await createClient();
   const { data, error } = await supabase.rpc("submit_oom_registration", { payload });
   if (error || !data) {
     const message = error?.message?.includes("already registered")

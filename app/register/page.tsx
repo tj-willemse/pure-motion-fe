@@ -6,6 +6,7 @@ import { RegistrationForm } from "@/app/portal/register/registration-form";
 import { ToastMessage } from "@/components/toast-message";
 import { SocialAuthButtons } from "@/components/social-auth-buttons";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { safeNext } from "@/lib/auth-next";
 
 export const metadata: Metadata = {
   title: "Create Your Account",
@@ -14,11 +15,12 @@ export const metadata: Metadata = {
 };
 
 type RegisterPageProps = {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; next?: string }>;
 };
 
 export default async function RegisterPage({ searchParams }: RegisterPageProps) {
-  const { error } = await searchParams;
+  const { error, next: requestedNext } = await searchParams;
+  const next = safeNext(requestedNext);
   const configured = isSupabaseConfigured();
 
   return (
@@ -46,11 +48,11 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
             <p>Start with the parent, guardian or adult golfer&apos;s details.</p>
             {!configured && <p className="portal-alert">Supabase connection details are still required before registration can be used.</p>}
             {configured && <SocialAuthButtons />}
-            <RegistrationForm configured={configured} />
+            <RegistrationForm configured={configured} next={next} />
             <Link href="/" className="button button-outline auth-back-button">
               <ArrowLeft size={18} aria-hidden="true" /> Back to website
             </Link>
-            <p className="portal-help">Already registered? <Link href="/login">Sign in</Link></p>
+            <p className="portal-help">Already registered? <Link href={`/login?next=${encodeURIComponent(next)}`}>Sign in</Link></p>
           </div>
         </section>
       </div>

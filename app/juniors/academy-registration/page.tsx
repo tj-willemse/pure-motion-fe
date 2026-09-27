@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { siteUrl } from "@/lib/site";
 import { AcademyRegistrationForm } from "./registration-form";
+import { registrationAccount } from "@/lib/registration-account";
 
 export const metadata: Metadata = {
   title: "2026 Junior Academy Registration",
@@ -21,6 +22,7 @@ export default async function AcademyRegistrationPage({
   searchParams: Promise<{ message?: string; error?: string }>;
 }) {
   const params = await searchParams;
+  const account = await registrationAccount("/juniors/academy-registration");
   return (
     <main id="main-content" className="academy-form-page">
       <section className="academy-form-hero">
@@ -37,7 +39,7 @@ export default async function AcademyRegistrationPage({
         <div className="site-shell">
           {params.message && <div className="academy-form-notice success" role="status">{params.message}</div>}
           {params.error && <div className="academy-form-notice error" role="alert">{params.error}</div>}
-          <AcademyRegistrationForm />
+          {account && <AcademyRegistrationForm account={account} />}
         </div>
       </section>
     </main>

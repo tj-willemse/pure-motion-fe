@@ -29,6 +29,7 @@ import {
   standardPoints,
 } from "@/lib/order-of-merit";
 import { siteUrl } from "@/lib/site";
+import { registrationAccount } from "@/lib/registration-account";
 
 export const metadata: Metadata = {
   title: "Junior Order of Merit",
@@ -46,7 +47,8 @@ export const metadata: Metadata = {
 const nextRounds = oomRounds.filter((item) => item.status === "open").slice(0, 4);
 const playableRounds = oomRounds.filter((item) => item.status !== "cancelled").length;
 
-export default function OrderOfMeritPage() {
+export default async function OrderOfMeritPage() {
+  const account = await registrationAccount("/juniors/order-of-merit#registration", false);
   return (
     <main id="main-content" className="oom-page">
       <section className="oom-hero" id="overview">
@@ -262,7 +264,11 @@ export default function OrderOfMeritPage() {
       </section>
       <section className="section oom-register-section">
         <div className="site-shell">
-          <OomRegistrationForm />
+          {account ? <OomRegistrationForm account={account} today={new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Johannesburg", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date())} /> : <div className="oom-registration-card">
+            <h3>Sign in to register your junior.</h3>
+            <p>Your entry and payment will be saved to your account. Children do not need their own login.</p>
+            <Link className="button" href="/login?next=%2Fjuniors%2Forder-of-merit%23registration">Sign in or create an account <ArrowRight size={18} /></Link>
+          </div>}
         </div>
       </section>
     </main>

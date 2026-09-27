@@ -12,7 +12,9 @@ export const dashboardNavigation: Record<DashboardRole, DashboardNavItem[]> = {
     { label: "Overview", href: "/dashboard" },
     { label: "Bookings", href: "/dashboard/bookings" },
     { label: "Family", href: "/dashboard/family" },
+    { label: "Junior Academy", href: "/dashboard/academy" },
     { label: "Order of Merit", href: "/dashboard/order-of-merit" },
+    { label: "Payments", href: "/dashboard/payments" },
     commonProfile,
   ],
   coach: [

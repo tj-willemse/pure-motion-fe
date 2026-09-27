@@ -14,7 +14,7 @@ const passwordChecks = [
 
 const strengthLabels = ["Very weak", "Weak", "Fair", "Good", "Strong"];
 
-export function RegistrationForm({ configured }: { configured: boolean }) {
+export function RegistrationForm({ configured, next = "/dashboard" }: { configured: boolean; next?: string }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -22,6 +22,7 @@ export function RegistrationForm({ configured }: { configured: boolean }) {
 
   return (
     <form action={register}>
+      <input type="hidden" name="next" value={next} />
       <div className="auth-name-fields">
         <div>
           <label htmlFor="firstName">First name</label>

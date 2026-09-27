@@ -1,11 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { safeNext as getSafeNext } from "@/lib/auth-next";
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next");
-  const safeNext = next?.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+  const safeNext = getSafeNext(next);
 
   if (code) {
     const supabase = await createClient();
@@ -18,6 +19,6 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.redirect(
-    `${origin}/login?error=${encodeURIComponent("The confirmation link is invalid or has expired.")}`,
+    `${origin}/login?next=${encodeURIComponent(safeNext)}&error=${encodeURIComponent("The confirmation link is invalid or has expired.")}`,
   );
 }
